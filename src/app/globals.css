@@ -1,0 +1,479 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-bebas: "Bebas Neue", Impact, sans-serif;
+  --font-oswald: "Oswald", sans-serif;
+  --font-outfit: "Outfit", system-ui, sans-serif;
+  --font-rajdhani: "Rajdhani", sans-serif;
+  --font-space-mono: "Space Mono", monospace;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cbc-black text-cbc-white font-body antialiased;
+    font-feature-settings: "kern" 1, "liga" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    @apply bg-cbc-crimson text-white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #08080A;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2C2C34;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #E5193A;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold tracking-tight;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  img {
+    @apply max-w-full;
+  }
+}
+
+@layer components {
+  /* ── Halftone overlay ── */
+  .halftone {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+
+  /* ── Scan line effect ── */
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.05) 2px,
+      rgba(0,0,0,0.05) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* ── Cinematic noise texture ── */
+  .noise {
+    position: relative;
+  }
+  .noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── Editorial tag chip ── */
+  .tag-chip {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 text-xs font-label font-semibold tracking-widest uppercase rounded-cbc;
+  }
+
+  /* ── Glow border ── */
+  .glow-border {
+    box-shadow: 0 0 0 1px rgba(229,25,58,0.3), 0 0 20px rgba(229,25,58,0.1);
+  }
+  .glow-border-gold {
+    box-shadow: 0 0 0 1px rgba(245,166,35,0.3), 0 0 20px rgba(245,166,35,0.1);
+  }
+  .glow-border-cyan {
+    box-shadow: 0 0 0 1px rgba(0,212,255,0.3), 0 0 20px rgba(0,212,255,0.1);
+  }
+
+  /* ── Cinematic Elegance Card ── */
+  .card-cinematic {
+    @apply bg-cbc-surface/80 backdrop-blur-md border border-white/[0.05] transition-all duration-300 ease-cbc rounded-cbc overflow-hidden;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+  }
+  .card-cinematic:hover {
+    @apply border-white/10;
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.8);
+    transform: translateY(-4px);
+  }
+  
+  /* Color specific hover states */
+  .card-cinematic-crimson:hover {
+    @apply border-cbc-crimson/30;
+    box-shadow: 0 20px 40px -10px rgba(229,25,58,0.2);
+  }
+  .card-cinematic-gold:hover {
+    @apply border-cbc-gold/30;
+    box-shadow: 0 20px 40px -10px rgba(245,166,35,0.2);
+  }
+  .card-cinematic-cyan:hover {
+    @apply border-cbc-cyan/30;
+    box-shadow: 0 20px 40px -10px rgba(0,212,255,0.2);
+  }
+  .card-cinematic-purple:hover {
+    @apply border-cbc-purple/30;
+    box-shadow: 0 20px 40px -10px rgba(139,92,246,0.2);
+  }
+
+  /* ── Section divider ── */
+  .section-divider {
+    @apply border-t border-cbc-border;
+  }
+
+  /* ── Gradient text ── */
+  .text-gradient-crimson {
+    background: linear-gradient(135deg, #E5193A, #F5A623);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #F5A623, #FAFAFA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-cyan {
+    background: linear-gradient(135deg, #00D4FF, #8B5CF6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-bebas), Impact, sans-serif;
+  }
+  .font-heading {
+    font-family: var(--font-oswald), sans-serif;
+  }
+  .font-body {
+    font-family: var(--font-outfit), system-ui, sans-serif;
+  }
+  .font-label {
+    font-family: var(--font-rajdhani), sans-serif;
+  }
+  .font-mono {
+    font-family: var(--font-space-mono), monospace;
+  }
+
+  /* ── Viewport-safe min heights ── */
+  .min-h-screen-safe {
+    min-height: 100svh;
+  }
+
+  /* ── Focus ring override ── */
+  .focus-cbc:focus-visible {
+    @apply outline-none ring-2 ring-cbc-crimson ring-offset-2 ring-offset-cbc-black;
+  }
+
+  /* ── Editorial Typography ── */
+  .drop-cap {
+    @apply float-left text-6xl sm:text-7xl leading-[0.85] mr-3 sm:mr-4 mt-1.5 sm:mt-2 text-cbc-crimson;
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    text-shadow: 0 0 30px rgba(229,25,58,0.3);
+    font-weight: 900;
+  }
+
+  .editorial-paragraph {
+    @apply relative overflow-visible;
+  }
+}
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-float,
+  .animate-glow-pulse,
+  .animate-scan-line,
+  .animate-gradient-shift {
+    animation: none !important;
+  }
+}
+
+/* ── Premium Accessibility Overrides ── */
+
+/* 1. Text Size Scaling */
+html[data-text-size="sm"] {
+  font-size: 87.5% !important; /* ~14px base */
+}
+html[data-text-size="base"] {
+  font-size: 100% !important; /* ~16px base */
+}
+html[data-text-size="lg"] {
+  font-size: 112.5% !important; /* ~18px base */
+}
+html[data-text-size="xl"] {
+  font-size: 125% !important; /* ~20px base */
+}
+
+/* 2. Dyslexia-Friendly Typography */
+html[data-font-dyslexia="true"] body,
+html[data-font-dyslexia="true"] p,
+html[data-font-dyslexia="true"] span,
+html[data-font-dyslexia="true"] a,
+html[data-font-dyslexia="true"] h1,
+html[data-font-dyslexia="true"] h2,
+html[data-font-dyslexia="true"] h3,
+html[data-font-dyslexia="true"] h4,
+html[data-font-dyslexia="true"] h5,
+html[data-font-dyslexia="true"] h6,
+html[data-font-dyslexia="true"] button,
+html[data-font-dyslexia="true"] li,
+html[data-font-dyslexia="true"] label,
+html[data-font-dyslexia="true"] input,
+html[data-font-dyslexia="true"] select,
+html[data-font-dyslexia="true"] textarea {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.12em !important;
+}
+
+/* 3. Spacing Controls */
+html[data-line-spacing="relaxed"] p,
+html[data-line-spacing="relaxed"] li {
+  line-height: 1.85 !important;
+}
+html[data-line-spacing="spacious"] p,
+html[data-line-spacing="spacious"] li {
+  line-height: 2.2 !important;
+}
+
+html[data-letter-spacing="wide"] p,
+html[data-letter-spacing="wide"] span,
+html[data-letter-spacing="wide"] a,
+html[data-letter-spacing="wide"] li {
+  letter-spacing: 0.08em !important;
+}
+html[data-letter-spacing="widest"] p,
+html[data-letter-spacing="widest"] span,
+html[data-letter-spacing="widest"] a,
+html[data-letter-spacing="widest"] li {
+  letter-spacing: 0.15em !important;
+}
+
+/* 4. Motion & Transition Controls */
+html[data-reduced-motion="true"] *,
+html[data-reduced-motion="true"] *::before,
+html[data-reduced-motion="true"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+html[data-reduced-motion="true"] .animate-float,
+html[data-reduced-motion="true"] .animate-glow-pulse,
+html[data-reduced-motion="true"] .animate-scan-line,
+html[data-reduced-motion="true"] .animate-gradient-shift,
+html[data-reduced-motion="true"] .animate-on-air,
+html[data-reduced-motion="true"] .animate-ticker {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* 5. High Contrast Overrides */
+
+/* --- High Contrast Dark --- */
+html[data-contrast="high-dark"] {
+  background-color: #000000 !important;
+}
+
+html[data-contrast="high-dark"] body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html[data-contrast="high-dark"] .bg-cbc-black,
+html[data-contrast="high-dark"] .bg-cbc-darker,
+html[data-contrast="high-dark"] .bg-cbc-charcoal,
+html[data-contrast="high-dark"] .bg-cbc-surface,
+html[data-contrast="high-dark"] .bg-cbc-elevated {
+  background-color: #000000 !important;
+}
+
+html[data-contrast="high-dark"] header,
+html[data-contrast="high-dark"] footer,
+html[data-contrast="high-dark"] section,
+html[data-contrast="high-dark"] div[class*="bg-cbc-"],
+html[data-contrast="high-dark"] .card-cinematic {
+  background-color: #000000 !important;
+  border-color: #ffffff !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+html[data-contrast="high-dark"] .text-cbc-muted {
+  color: #e5e5e5 !important;
+}
+
+html[data-contrast="high-dark"] .text-cbc-faint {
+  color: #cccccc !important;
+}
+
+html[data-contrast="high-dark"] a:hover {
+  text-decoration: underline !important;
+  color: #ffffff !important;
+}
+
+html[data-contrast="high-dark"] button,
+html[data-contrast="high-dark"] a[class*="border"] {
+  border: 2px solid #ffffff !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+html[data-contrast="high-dark"] .halftone,
+html[data-contrast="high-dark"] .noise::before,
+html[data-contrast="high-dark"] .scanlines::after,
+html[data-contrast="high-dark"] .absolute.bg-cbc-gradient {
+  display: none !important;
+}
+
+/* --- High Contrast Light --- */
+html[data-contrast="high-light"] {
+  background-color: #ffffff !important;
+}
+
+html[data-contrast="high-light"] body {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html[data-contrast="high-light"] .bg-cbc-black,
+html[data-contrast="high-light"] .bg-cbc-darker,
+html[data-contrast="high-light"] .bg-cbc-charcoal,
+html[data-contrast="high-light"] .bg-cbc-surface,
+html[data-contrast="high-light"] .bg-cbc-elevated {
+  background-color: #ffffff !important;
+}
+
+html[data-contrast="high-light"] header,
+html[data-contrast="high-light"] footer,
+html[data-contrast="high-light"] section,
+html[data-contrast="high-light"] div[class*="bg-cbc-"],
+html[data-contrast="high-light"] .card-cinematic {
+  background-color: #ffffff !important;
+  border-color: #000000 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+html[data-contrast="high-light"] h1,
+html[data-contrast="high-light"] h2,
+html[data-contrast="high-light"] h3,
+html[data-contrast="high-light"] h4,
+html[data-contrast="high-light"] h5,
+html[data-contrast="high-light"] h6 {
+  color: #000000 !important;
+}
+
+html[data-contrast="high-light"] p,
+html[data-contrast="high-light"] li,
+html[data-contrast="high-light"] span:not([class*="text-cbc-"]) {
+  color: #111111 !important;
+}
+
+html[data-contrast="high-light"] .text-cbc-muted,
+html[data-contrast="high-light"] .text-cbc-faint {
+  color: #333333 !important;
+}
+
+html[data-contrast="high-light"] a {
+  color: #0044cc !important;
+  text-decoration: underline !important;
+}
+
+html[data-contrast="high-light"] a:hover {
+  color: #002288 !important;
+}
+
+html[data-contrast="high-light"] button,
+html[data-contrast="high-light"] a[class*="border"] {
+  border: 2px solid #000000 !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html[data-contrast="high-light"] button:hover {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html[data-contrast="high-light"] .halftone,
+html[data-contrast="high-light"] .noise::before,
+html[data-contrast="high-light"] .scanlines::after,
+html[data-contrast="high-light"] .absolute.bg-cbc-gradient,
+html[data-contrast="high-light"] .h-\[2px\].w-full.bg-gradient-to-r {
+  display: none !important;
+}
+
+/* --- Interactive Reading Focus Ruler --- */
+.cbc-reading-ruler {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #E5193A;
+  box-shadow: 0 0 10px rgba(229, 25, 58, 0.8), 0 0 20px rgba(229, 25, 58, 0.4);
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.05s linear;
+}
+
+.cbc-reading-mask-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.cbc-reading-mask-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  z-index: 9998;
+}

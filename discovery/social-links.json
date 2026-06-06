@@ -1,0 +1,64 @@
+{
+    "cbc": {
+        "name": "Comic Book Clique",
+        "shortName": "CBC",
+        "channels": [
+            {
+                "platform": "facebook",
+                "url": "http://www.facebook.com/comicbookclique",
+                "handle": "comicbookclique"
+            },
+            {
+                "platform": "spotify",
+                "url": "https://open.spotify.com/show/6JieQia6J6lQ8vU4Mj3djK",
+                "handle": "Major Issues Podcast"
+            },
+            {
+                "platform": "instagram",
+                "url": "http://www.instagram.com/comicbookclique",
+                "handle": "comicbookclique"
+            },
+            {
+                "platform": "youtube",
+                "url": "http://www.youtube.com/comicbookclique",
+                "handle": "comicbookclique"
+            },
+            {
+                "platform": "twitter",
+                "url": "http://www.x.com/MajorIssuesCBC",
+                "handle": "MajorIssuesCBC"
+            }
+        ]
+    },
+    "dsr": {
+        "name": "Dirt Sheet Radio",
+        "shortName": "DSR",
+        "channels": [
+            {
+                "platform": "facebook",
+                "url": "http://www.facebook.com/DirtSheetRadio",
+                "handle": "DirtSheetRadio"
+            },
+            {
+                "platform": "twitter",
+                "url": "http://www.x.com/DirtSheetRadio",
+                "handle": "DirtSheetRadio"
+            },
+            {
+                "platform": "instagram",
+                "url": "http://www.instagram.com/officialDirtSheetRadio",
+                "handle": "officialDirtSheetRadio"
+            },
+            {
+                "platform": "youtube",
+                "url": "http://www.youtube.com/@dirtsheetradio",
+                "handle": "dirtsheetradio"
+            },
+            {
+                "platform": "libsyn",
+                "url": "http://www.dirtsheetradio.libsyn.com",
+                "handle": "dirtsheetradio"
+            }
+        ]
+    }
+}

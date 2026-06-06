@@ -1,0 +1,42 @@
+[
+    {
+        "id": "george-serrano",
+        "name": "George Serrano",
+        "squarespaceId": "5cd46c38a902ff00010c3dde",
+        "role": "Lead Writer / Co-Founder",
+        "sections": [
+            "majorarticles",
+            "comicnews",
+            "majorreviews"
+        ]
+    },
+    {
+        "id": "frank-jarome",
+        "name": "Frank Jarome",
+        "squarespaceId": "692670a2a6963b1d7eb1049b",
+        "role": "Contributor",
+        "sections": [
+            "majorarticles"
+        ]
+    },
+    {
+        "id": "jonathan-escudero",
+        "name": "Jonathan Escudero",
+        "squarespaceId": "65e68db82bc5301652cf248f",
+        "role": "News Writer",
+        "sections": [
+            "comicnews"
+        ]
+    },
+    {
+        "id": "comicbook-clique",
+        "name": "ComicBook Clique",
+        "squarespaceId": "5ce8113d4152d800018c8cda",
+        "role": "Editorial Staff",
+        "sections": [
+            "majorarticles",
+            "comicnews",
+            "majorreviews"
+        ]
+    }
+]

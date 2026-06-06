@@ -1,0 +1,61 @@
+{
+    "logos": [
+        {
+            "id": "cbc-circle",
+            "alt": "Comic Book Clique Circle Logo",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/1739421692803-0INMARFJ0QDGHUY2X7ZM/CircleCBC.png"
+        },
+        {
+            "id": "cbc-main",
+            "alt": "Comic Book Clique Main Logo",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/1739421700371-RCG51JTM27JGL051FHEI/1000003968+%28630%C3%97630%29.png"
+        },
+        {
+            "id": "major-issues",
+            "alt": "Major Issues Podcast Logo",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/1739421810859-LW8NBT2NH0LO2GZ5U3DS/MajorIssuesLogo.png"
+        },
+        {
+            "id": "major-previews",
+            "alt": "Major Previews Logo",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/1739421698987-X71E7TB5GV501WELMK2O/Major+Previews+Logo.png"
+        },
+        {
+            "id": "dsr",
+            "alt": "Dirt Sheet Radio Logo",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/1739421686653-CZS7I7RNN5D0JGQG3VVO/ysbrlogo.png"
+        }
+    ],
+    "podcastImages": [
+        {
+            "slug": "miep418",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/b49ac757-ae13-470d-a8c0-aa265603e8d9/Screenshot+2026-01-27+233013.png",
+            "alt": "Major Issues Podcast Ep 418: Dissecting Absolute Superman"
+        },
+        {
+            "slug": "miep417",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/a9affcc2-30ea-410f-ad14-4e2f1094ed19/Screenshot+2026-01-21+003848.png",
+            "alt": "Major Issues Ep 417: Dissecting Absolute Batman"
+        },
+        {
+            "slug": "miep416",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/8e7a31fc-3a4b-488e-9a0b-1e1c7289e499/Screenshot+2026-01-14+010520.png",
+            "alt": "Major Issues Podcast Ep 416: Absolute Universe 101!"
+        },
+        {
+            "slug": "miep415",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/ca209e1b-38e7-48e3-bb00-d43d058782d6/414a.jpg",
+            "alt": "Major Issues Ep 415: Predicting 2026"
+        },
+        {
+            "slug": "miep414",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/bd32ee7f-623e-43ff-86a9-96e36dfef9cc/bw.jpg",
+            "alt": "Major Issues Podcast Ep 414: Best and Worst of 2025!"
+        },
+        {
+            "slug": "miep413",
+            "url": "https://images.squarespace-cdn.com/content/v1/5d56e145f80b7500016ba502/11f59aa4-a465-4ca5-bb3c-9b18d04903bd/Screenshot+2025-12-23+213314.png",
+            "alt": "Major Issues Podcast Ep 413: Merry Little Batman Recap & Review"
+        }
+    ]
+}

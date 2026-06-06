@@ -1,0 +1,74 @@
+[
+    {
+        "id": "reviews",
+        "label": "Major Reviews",
+        "oldPath": "/majorreviews",
+        "newPath": "/reviews",
+        "color": "crimson",
+        "description": "Reviewing the latest and greatest comics on shelves today!",
+        "icon": "star"
+    },
+    {
+        "id": "news",
+        "label": "Comic Book News",
+        "oldPath": "/comicnews",
+        "newPath": "/news",
+        "color": "gold",
+        "description": "Breaking comic book news and industry coverage",
+        "icon": "newspaper"
+    },
+    {
+        "id": "features",
+        "label": "Major Articles",
+        "oldPath": "/majorarticles",
+        "newPath": "/features",
+        "color": "cyan",
+        "description": "Deep dives, interviews, and editorial features",
+        "icon": "file-text"
+    },
+    {
+        "id": "podcast",
+        "label": "Major Issues Podcast",
+        "oldPath": "/majorissues",
+        "newPath": "/podcast",
+        "color": "purple",
+        "description": "The #1 podcast covering comics, movies, TV and more!",
+        "icon": "mic"
+    },
+    {
+        "id": "pop-culture",
+        "label": "Pop Culture",
+        "oldPath": "/popculturenews",
+        "newPath": "/pop-culture",
+        "color": "gold",
+        "description": "Movies, TV, and pop culture coverage",
+        "icon": "tv"
+    },
+    {
+        "id": "wrestling",
+        "label": "Wrestling",
+        "oldPath": "/wrestling-news",
+        "newPath": "/wrestling",
+        "color": "crimson",
+        "description": "Wrestling news and Dirt Sheet Radio",
+        "icon": "zap"
+    },
+    {
+        "id": "gaming",
+        "label": "Gaming",
+        "oldPath": "/gamingnews",
+        "newPath": "/gaming",
+        "color": "cyan",
+        "description": "Video game news and reviews",
+        "icon": "gamepad-2"
+    },
+    {
+        "id": "merch",
+        "label": "Merch",
+        "oldPath": "/merchandise",
+        "newPath": "/merch",
+        "color": "gold",
+        "description": "Official CBC and DSR merchandise",
+        "icon": "shopping-bag"
+    }
+]

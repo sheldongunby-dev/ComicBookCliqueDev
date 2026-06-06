@@ -1,0 +1,36 @@
+# dependencies
+/node_modules
+/.pnpm-store
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# Keystatic & dev system files
+.claude/
+artifacts/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+.next-build-*.txt
+.vercel-*.txt
+vercel-error.txt
+
+# local env files
+.env*.local
+
+# vercel & netlify
+.vercel
+.netlify
+
+# temporary scraper files (optional, but keeps repo clean if you scrape on demand)
+tmp_*.json
+dsr.json
+major-issues.json
+tsconfig.tsbuildinfo

@@ -1,0 +1,69 @@
+{
+    "crawledAt": "2026-03-03T23:42:00-05:00",
+    "source": "https://comicbookclique.com",
+    "platform": "Squarespace",
+    "totalUrls": 656,
+    "sections": [
+        {
+            "name": "Major Issues Podcast",
+            "path": "/majorissues",
+            "newPath": "/podcast",
+            "count": 418
+        },
+        {
+            "name": "Major Reviews",
+            "path": "/majorreviews",
+            "newPath": "/reviews",
+            "count": 120
+        },
+        {
+            "name": "Major Articles",
+            "path": "/majorarticles",
+            "newPath": "/features",
+            "count": 60
+        },
+        {
+            "name": "Comic Book News",
+            "path": "/comicnews",
+            "newPath": "/news",
+            "count": 80
+        },
+        {
+            "name": "Pop Culture News",
+            "path": "/popculturenews",
+            "newPath": "/pop-culture",
+            "count": 30
+        },
+        {
+            "name": "Wrestling News",
+            "path": "/wrestling-news",
+            "newPath": "/wrestling",
+            "count": 25
+        },
+        {
+            "name": "Gaming News",
+            "path": "/gamingnews",
+            "newPath": "/gaming",
+            "count": 20
+        },
+        {
+            "name": "Dirt Sheet Radio",
+            "path": "/dirtsheetradio",
+            "newPath": "/wrestling",
+            "count": 200
+        },
+        {
+            "name": "Merchandise",
+            "path": "/merchandise",
+            "newPath": "/merch",
+            "count": 1
+        },
+        {
+            "name": "Contact",
+            "path": "/contact",
+            "newPath": "/contact",
+            "count": 1
+        }
+    ],
+    "sitemapUrl": "https://comicbookclique.com/sitemap.xml"
+}
