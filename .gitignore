@@ -34,3 +34,5 @@ tmp_*.json
 dsr.json
 major-issues.json
 tsconfig.tsbuildinfo
+
+.vercel
