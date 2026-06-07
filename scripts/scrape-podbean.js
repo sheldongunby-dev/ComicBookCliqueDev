@@ -8,7 +8,7 @@ const turndownService = new TurndownService({
   codeBlockStyle: 'fenced'
 });
 
-const FEED_URL = 'https://comicbookclique.podbean.com/feed.xml';
+const FEED_URL = 'https://feed.podbean.com/comicbookclique/feed.xml';
 const DEST_DIR = path.join(__dirname, '../src/content/podcasts');
 
 if (!fs.existsSync(DEST_DIR)) fs.mkdirSync(DEST_DIR, { recursive: true });
