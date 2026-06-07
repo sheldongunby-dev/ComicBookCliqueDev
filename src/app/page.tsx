@@ -33,18 +33,19 @@ export default async function HomePage() {
     const podcastEpisodes = await getPodcastEpisodes();
     const topPodcasts = podcastEpisodes.slice(0, 4);
     
-    // Get the top 3 latest interviews for the hero
-    const allNews = await getNews();
-    const allArticles = await getArticles();
-    const allContent = [...allArticles, ...allNews].sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
-    const featuredInterviews = allContent.filter(item => item.title.toLowerCase().includes('interview')).slice(0, 3) as any[];
+    const allReviews = await getReviews();
+    const featuredList = allReviews.filter(r => r.featured);
+    const topReviews = featuredList.length >= 9 ? featuredList : allReviews;
+    
+    const heroReviews = topReviews.slice(0, 3) as any[];
+    const gridReviews = topReviews.slice(3, 9);
     
     const latestEpisode = topPodcasts[0];
 
     return (
         <>
             {/* ── Editorial Hero Carousel ── */}
-            <EditorialHero featuredStories={featuredInterviews} />
+            <EditorialHero featuredStories={heroReviews} />
 
             {/* ── News + Podcast Split ── */}
             <SectionShell background="darker" id="news-podcast">
@@ -139,7 +140,7 @@ export default async function HomePage() {
                 />
                 <FadeIn>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {featuredReviews.slice(0, 6).map((review) => (
+                        {gridReviews.map((review) => (
                             <ReviewCard key={review.id} review={review} />
                         ))}
                     </div>
