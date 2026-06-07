@@ -1,4 +1,4 @@
-import { getFeaturedReviews, getLatestNews, getPodcastEpisodes, getArticles, getNews } from "@/lib/content";
+import { getFeaturedReviews, getReviews, getLatestNews, getPodcastEpisodes, getArticles, getNews } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { EditorialHero } from "@/components/cinematic/EditorialHero";
 import { ReviewCard } from "@/components/editorial/ReviewCard";
