@@ -1,4 +1,4 @@
-import { getFeaturedReviews, getLatestNews, getPodcastEpisodes, getArticles } from "@/lib/content";
+import { getFeaturedReviews, getLatestNews, getPodcastEpisodes, getArticles, getNews } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { EditorialHero } from "@/components/cinematic/EditorialHero";
 import { ReviewCard } from "@/components/editorial/ReviewCard";
@@ -33,12 +33,12 @@ export default async function HomePage() {
     const podcastEpisodes = await getPodcastEpisodes();
     const topPodcasts = podcastEpisodes.slice(0, 4);
     
-    // Get the top 3 latest articles for the hero
+    // Get the top 3 latest interviews for the hero
+    const allNews = await getNews();
     const allArticles = await getArticles();
-    const featuredInterviews = allArticles.slice(0, 3);
+    const allContent = [...allArticles, ...allNews].sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
+    const featuredInterviews = allContent.filter(item => item.title.toLowerCase().includes('interview')).slice(0, 3) as any[];
     
-    // Get remaining top features excluding the hero items
-    const featuredArticles = allArticles.slice(3, 6);
     const latestEpisode = topPodcasts[0];
 
     return (
