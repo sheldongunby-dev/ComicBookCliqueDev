@@ -120,12 +120,17 @@ export async function getNewsBySlug(slug: string): Promise<ContentItem | undefin
 export async function getPodcastEpisodes(): Promise<PodcastEpisode[]> {
     const raw = await reader.collections.podcasts.all();
     const mapped = await Promise.all(raw.map(p => mapKeystaticItem(p.slug, p.entry, 'podcast')));
-    return mapped.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
+    return mapped.sort((a, b) => {
+        const timeDiff = new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime();
+        if (timeDiff !== 0) return timeDiff;
+        // Secondary sort by title (e.g. Ep 432 before Ep 431 if same date)
+        return b.title.localeCompare(a.title);
+    });
 }
 
 export async function getLatestEpisode(): Promise<PodcastEpisode | undefined> {
     const episodes = await getPodcastEpisodes();
-    return episodes.sort((a, b) => b.episodeNumber - a.episodeNumber)[0];
+    return episodes[0];
 }
 
 export async function getEpisodeBySlug(slug: string): Promise<PodcastEpisode | undefined> {
