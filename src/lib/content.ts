@@ -58,7 +58,8 @@ async function mapKeystaticItem(slug: string, entry: any, type: 'article' | 'new
 // ── Reviews ──
 export async function getReviews(): Promise<Review[]> {
     const raw = await reader.collections.reviews.all();
-    return Promise.all(raw.map(r => mapKeystaticItem(r.slug, r.entry, 'review')));
+    const mapped = await Promise.all(raw.map(r => mapKeystaticItem(r.slug, r.entry, 'review')));
+    return mapped.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
 }
 
 export async function getFeaturedReviews(): Promise<Review[]> {
@@ -78,7 +79,8 @@ export async function getReviewBySlug(slug: string): Promise<Review | undefined>
 // ── Articles / Features ──
 export async function getArticles(): Promise<Article[]> {
     const raw = await reader.collections.articles.all();
-    return Promise.all(raw.map(a => mapKeystaticItem(a.slug, a.entry, 'article')));
+    const mapped = await Promise.all(raw.map(a => mapKeystaticItem(a.slug, a.entry, 'article')));
+    return mapped.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
 }
 
 export async function getFeaturedArticles(): Promise<Article[]> {
@@ -97,12 +99,13 @@ export async function getArticleBySlug(slug: string): Promise<Article | undefine
 // ── News ──
 export async function getNews(): Promise<ContentItem[]> {
     const raw = await reader.collections.news.all();
-    return Promise.all(raw.map(n => mapKeystaticItem(n.slug, n.entry, 'news')));
+    const mapped = await Promise.all(raw.map(n => mapKeystaticItem(n.slug, n.entry, 'news')));
+    return mapped.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
 }
 
 export async function getLatestNews(count = 6): Promise<ContentItem[]> {
     const news = await getNews();
-    return news.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()).slice(0, count);
+    return news.slice(0, count);
 }
 
 export async function getNewsBySlug(slug: string): Promise<ContentItem | undefined> {
@@ -116,7 +119,8 @@ export async function getNewsBySlug(slug: string): Promise<ContentItem | undefin
 // ── Podcast ──
 export async function getPodcastEpisodes(): Promise<PodcastEpisode[]> {
     const raw = await reader.collections.podcasts.all();
-    return Promise.all(raw.map(p => mapKeystaticItem(p.slug, p.entry, 'podcast')));
+    const mapped = await Promise.all(raw.map(p => mapKeystaticItem(p.slug, p.entry, 'podcast')));
+    return mapped.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
 }
 
 export async function getLatestEpisode(): Promise<PodcastEpisode | undefined> {
