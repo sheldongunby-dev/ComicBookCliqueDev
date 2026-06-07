@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const BASE_URL = 'https://comicbookclique.com';
+const BASE_URL = 'https://comicbookclique.squarespace.com';
 const TARGET_DIR = path.join(__dirname, '../src/content/generated');
 
 // Map endpoints to our local JSON schema generators
