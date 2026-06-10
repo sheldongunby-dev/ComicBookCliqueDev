@@ -1,7 +1,7 @@
 import { getEpisodeBySlug, getPodcastEpisodes } from "@/lib/content";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { ProseContent } from "@/components/editorial/ProseContent";
+import { PortableTextContent } from "@/components/editorial/PortableTextContent";
 import { formatDateShort } from "@/lib/utils/helpers";
 import { ArrowLeft, Mic } from "lucide-react";
 import Link from "next/link";
@@ -17,6 +17,8 @@ export async function generateStaticParams() {
         slug: e.slug,
     }));
 }
+
+export const revalidate = 60;
 
 export default async function PodcastEpisodePage({ params }: Props) {
     const { slug } = await params;
@@ -98,7 +100,7 @@ export default async function PodcastEpisodePage({ params }: Props) {
                                 </div>
                             )}
 
-                            <ProseContent html={(episode as any).rawMarkdoc || ""} />
+                            <PortableTextContent value={(episode as any).content} />
                             
                             {/* External Links */}
                             {(episode.spotifyUrl || episode.appleUrl) && (

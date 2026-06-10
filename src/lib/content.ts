@@ -1,147 +1,228 @@
-import type { Article, Review } from "@/lib/schema/article.schema";
-import type { PodcastEpisode } from "@/lib/schema/podcast.schema";
-import { reader } from './keystatic';
-import fs from 'fs';
-import path from 'path';
-
-// Helper to get raw markdown from .mdoc files (bypassing AST parsing)
-function getRawMarkdown(collection: string, slug: string): string {
-    try {
-        const filePath = path.join(process.cwd(), 'src/content', collection, `${slug}.mdoc`);
-        const content = fs.readFileSync(filePath, 'utf-8');
-        // Split by --- to remove YAML frontmatter
-        const parts = content.split('---');
-        if (parts.length >= 3) {
-            // Rejoin everything after the second '---'
-            return parts.slice(2).join('---').trim();
-        }
-        return content;
-    } catch (e) {
-        console.error(`Error reading raw markdown for ${collection}/${slug}:`, e);
-        return '';
-    }
-}
+import type { Article, Review } from '@/lib/schema/article.schema'
+import type { PodcastEpisode } from '@/lib/schema/podcast.schema'
+import { sanityClient } from '@/sanity/client'
+import {
+  articlesQuery,
+  featuredArticlesQuery,
+  articleBySlugQuery,
+  articleSlugsQuery,
+  newsQuery,
+  latestNewsQuery,
+  newsBySlugQuery,
+  newsSlugsQuery,
+  reviewsQuery,
+  featuredReviewsQuery,
+  reviewBySlugQuery,
+  reviewSlugsQuery,
+  podcastsQuery,
+  latestEpisodeQuery,
+  podcastBySlugQuery,
+  podcastSlugsQuery,
+  podcastReviewsQuery,
+  homepageFeaturedQuery,
+  siteSettingsQuery,
+} from '@/lib/sanityQueries'
 
 // ── Type union for all content ──
-export type ContentItem = Article | Review;
+export type ContentItem = Article | Review
 
-// Mapping helpers to format Keystatic data to our schema
-async function mapKeystaticItem(slug: string, entry: any, type: 'article' | 'news' | 'review' | 'podcast'): Promise<any> {
-    const base = {
-        id: slug,
-        slug,
-        type,
-        title: entry.title,
-        publishDate: entry.publishDate || new Date().toISOString().split('T')[0],
-        category: entry.category || type,
-        excerpt: entry.excerpt || '',
-        featured: entry.featured || false,
-        author: { name: entry.author_name || 'ComicBook Clique' },
-        heroImage: entry.heroImage_url ? { url: entry.heroImage_url, alt: entry.heroImage_alt || entry.title } : undefined,
-    };
+// ─────────────────────────────────────────────
+// ARTICLES / FEATURES
+// ─────────────────────────────────────────────
 
-    if (type === 'review') {
-        return { ...base, rating: entry.rating || undefined };
-    }
-    
-    if (type === 'podcast') {
-        return { 
-            ...base, 
-            episodeNumber: entry.episodeNumber || 0,
-            spotifyUrl: entry.spotifyUrl || undefined
-        };
-    }
-
-    return base;
-}
-
-// ── Reviews ──
-export async function getReviews(): Promise<Review[]> {
-    const raw = await reader.collections.reviews.all();
-    const mapped = await Promise.all(raw.map(r => mapKeystaticItem(r.slug, r.entry, 'review')));
-    return mapped.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
-}
-
-export async function getFeaturedReviews(): Promise<Review[]> {
-    const all = await getReviews();
-    const featured = all.filter((r) => r.featured);
-    return featured.length > 0 ? featured.slice(0, 6) : all.slice(0, 6);
-}
-
-export async function getReviewBySlug(slug: string): Promise<Review | undefined> {
-    const entry = await reader.collections.reviews.read(slug);
-    if (!entry) return undefined;
-    const mapped = await mapKeystaticItem(slug, entry, 'review');
-    mapped.rawMarkdoc = getRawMarkdown('reviews', slug);
-    return mapped;
-}
-
-// ── Articles / Features ──
 export async function getArticles(): Promise<Article[]> {
-    const raw = await reader.collections.articles.all();
-    const mapped = await Promise.all(raw.map(a => mapKeystaticItem(a.slug, a.entry, 'article')));
-    return mapped.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
+  const data = await sanityClient.fetch(articlesQuery, {}, { next: { revalidate: 60 } })
+  return (data ?? []).map(normalizeItem('article'))
 }
 
 export async function getFeaturedArticles(): Promise<Article[]> {
-    const all = await getArticles();
-    return all.filter((a) => a.featured).slice(0, 4);
+  const data = await sanityClient.fetch(featuredArticlesQuery, {}, { next: { revalidate: 60 } })
+  return (data ?? []).map(normalizeItem('article'))
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | undefined> {
-    const entry = await reader.collections.articles.read(slug);
-    if (!entry) return undefined;
-    const mapped = await mapKeystaticItem(slug, entry, 'article');
-    mapped.rawMarkdoc = getRawMarkdown('articles', slug);
-    return mapped;
+  const data = await sanityClient.fetch(articleBySlugQuery, { slug }, { next: { revalidate: 60 } })
+  if (!data) return undefined
+  return normalizeItem('article')(data)
 }
 
-// ── News ──
+export async function getArticleSlugs(): Promise<string[]> {
+  const data = await sanityClient.fetch(articleSlugsQuery, {}, { next: { revalidate: 300 } })
+  return (data ?? []).map((d: any) => d.slug).filter(Boolean)
+}
+
+// ─────────────────────────────────────────────
+// BREAKING NEWS
+// ─────────────────────────────────────────────
+
 export async function getNews(): Promise<ContentItem[]> {
-    const raw = await reader.collections.news.all();
-    const mapped = await Promise.all(raw.map(n => mapKeystaticItem(n.slug, n.entry, 'news')));
-    return mapped.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
+  const data = await sanityClient.fetch(newsQuery, {}, { next: { revalidate: 30 } })
+  return (data ?? []).map(normalizeItem('news'))
 }
 
 export async function getLatestNews(count = 6): Promise<ContentItem[]> {
-    const news = await getNews();
-    return news.slice(0, count);
+  const data = await sanityClient.fetch(latestNewsQuery, { count }, { next: { revalidate: 30 } })
+  return (data ?? []).map(normalizeItem('news'))
 }
 
 export async function getNewsBySlug(slug: string): Promise<ContentItem | undefined> {
-    const entry = await reader.collections.news.read(slug);
-    if (!entry) return undefined;
-    const mapped = await mapKeystaticItem(slug, entry, 'news');
-    mapped.rawMarkdoc = getRawMarkdown('news', slug);
-    return mapped;
+  const data = await sanityClient.fetch(newsBySlugQuery, { slug }, { next: { revalidate: 30 } })
+  if (!data) return undefined
+  return normalizeItem('news')(data)
 }
 
-// ── Podcast ──
+export async function getNewsSlugs(): Promise<string[]> {
+  const data = await sanityClient.fetch(newsSlugsQuery, {}, { next: { revalidate: 300 } })
+  return (data ?? []).map((d: any) => d.slug).filter(Boolean)
+}
+
+// ─────────────────────────────────────────────
+// REVIEWS
+// ─────────────────────────────────────────────
+
+export async function getReviews(): Promise<Review[]> {
+  const data = await sanityClient.fetch(reviewsQuery, {}, { next: { revalidate: 60 } })
+  return (data ?? []).map(normalizeItem('review'))
+}
+
+export async function getFeaturedReviews(): Promise<Review[]> {
+  const all = await sanityClient.fetch(featuredReviewsQuery, {}, { next: { revalidate: 60 } })
+  const featured = (all ?? []).map(normalizeItem('review'))
+  return featured.length > 0 ? featured : (await getReviews()).slice(0, 6)
+}
+
+export async function getReviewBySlug(slug: string): Promise<Review | undefined> {
+  const data = await sanityClient.fetch(reviewBySlugQuery, { slug }, { next: { revalidate: 60 } })
+  if (!data) return undefined
+  return normalizeItem('review')(data)
+}
+
+export async function getReviewSlugs(): Promise<string[]> {
+  const data = await sanityClient.fetch(reviewSlugsQuery, {}, { next: { revalidate: 300 } })
+  return (data ?? []).map((d: any) => d.slug).filter(Boolean)
+}
+
+// ─────────────────────────────────────────────
+// PODCASTS
+// ─────────────────────────────────────────────
+
 export async function getPodcastEpisodes(): Promise<PodcastEpisode[]> {
-    const raw = await reader.collections.podcasts.all();
-    const mapped = await Promise.all(raw.map(p => mapKeystaticItem(p.slug, p.entry, 'podcast')));
-    return mapped.sort((a, b) => {
-        const timeDiff = new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime();
-        if (timeDiff !== 0) return timeDiff;
-        // Secondary sort by title (e.g. Ep 432 before Ep 431 if same date)
-        return b.title.localeCompare(a.title);
-    });
+  const data = await sanityClient.fetch(podcastsQuery, {}, { next: { revalidate: 60 } })
+  return (data ?? []).map(normalizeItem('podcast'))
 }
 
 export async function getLatestEpisode(): Promise<PodcastEpisode | undefined> {
-    const episodes = await getPodcastEpisodes();
-    return episodes[0];
+  const data = await sanityClient.fetch(latestEpisodeQuery, {}, { next: { revalidate: 60 } })
+  if (!data) return undefined
+  return normalizeItem('podcast')(data)
 }
 
 export async function getEpisodeBySlug(slug: string): Promise<PodcastEpisode | undefined> {
-    const entry = await reader.collections.podcasts.read(slug);
-    if (!entry) return undefined;
-    const mapped = await mapKeystaticItem(slug, entry, 'podcast');
-    mapped.rawMarkdoc = getRawMarkdown('podcasts', slug);
-    return mapped;
+  const data = await sanityClient.fetch(podcastBySlugQuery, { slug }, { next: { revalidate: 60 } })
+  if (!data) return undefined
+  return normalizeItem('podcast')(data)
 }
 
-// ── Authors ──
+export async function getPodcastSlugs(): Promise<string[]> {
+  const data = await sanityClient.fetch(podcastSlugsQuery, {}, { next: { revalidate: 300 } })
+  return (data ?? []).map((d: any) => d.slug).filter(Boolean)
+}
+
+// ─────────────────────────────────────────────
+// PODCAST REVIEWS
+// ─────────────────────────────────────────────
+
+export async function getPodcastReviews() {
+  const data = await sanityClient.fetch(podcastReviewsQuery, {}, { next: { revalidate: 60 } })
+  return data ?? []
+}
+
+// ─────────────────────────────────────────────
+// HOMEPAGE — combined single fetch
+// ─────────────────────────────────────────────
+
+export async function getHomepageData() {
+  return sanityClient.fetch(homepageFeaturedQuery, {}, { next: { revalidate: 60 } })
+}
+
+export async function getSiteSettings() {
+  return sanityClient.fetch(siteSettingsQuery, {}, { next: { revalidate: 60 } })
+}
+
+// ─────────────────────────────────────────────
+// AUTHORS
+// ─────────────────────────────────────────────
+
 export function getAuthors() {
-    return [];
+  // Author profiles are managed in Sanity Studio — no static fallback needed
+  return []
+}
+
+// ─────────────────────────────────────────────
+// INTERNAL: data normalizer
+// Maps Sanity document shape → app schema shape
+// ─────────────────────────────────────────────
+
+function normalizeItem(type: string) {
+  return (doc: any): any => {
+    const base = {
+      _id: doc._id,
+      id: doc.slug ?? doc.id,
+      slug: doc.slug ?? doc.id,
+      type,
+      title: doc.title ?? doc.showName ?? '',
+      publishDate: doc.publishDate ?? new Date().toISOString().split('T')[0],
+      category: doc.category ?? type,
+      excerpt: doc.excerpt ?? '',
+      featured: doc.featured ?? false,
+      tags: doc.tags ?? [],
+      author: doc.author ?? { name: 'ComicBook Clique', avatar: null },
+      heroImage: doc.heroImage?.url
+        ? {
+            url: doc.heroImage.url,
+            alt: doc.heroImage.alt ?? doc.title ?? '',
+            caption: doc.heroImage.caption ?? undefined,
+            hotspot: doc.heroImage.hotspot,
+            crop: doc.heroImage.crop,
+          }
+        : undefined,
+      // Portable text content (for detail pages)
+      content: doc.content ?? null,
+      // SEO
+      seoTitle: doc.seoTitle ?? undefined,
+      seoDescription: doc.seoDescription ?? undefined,
+      ogImage: doc.ogImage ?? undefined,
+    }
+
+    if (type === 'review') {
+      return {
+        ...base,
+        rating: doc.rating ?? undefined,
+        verdict: doc.verdict ?? undefined,
+        pros: doc.pros ?? [],
+        cons: doc.cons ?? [],
+      }
+    }
+
+    if (type === 'podcast') {
+      return {
+        ...base,
+        episodeNumber: doc.episodeNumber ?? 0,
+        spotifyUrl: doc.spotifyUrl ?? undefined,
+        appleUrl: doc.appleUrl ?? undefined,
+        youtubeUrl: doc.youtubeUrl ?? undefined,
+        duration: doc.duration ?? undefined,
+      }
+    }
+
+    if (type === 'interview') {
+      return {
+        ...base,
+        interviewee: doc.interviewee ?? undefined,
+        intervieweeRole: doc.intervieweeRole ?? undefined,
+      }
+    }
+
+    return base
+  }
 }

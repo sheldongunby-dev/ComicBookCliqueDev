@@ -13,7 +13,15 @@ const nextConfig: NextConfig = {
         hostname: "images.squarespace-cdn.com",
       },
       {
+        protocol: "http",
+        hostname: "images.squarespace-cdn.com",
+      },
+      {
         protocol: "https",
+        hostname: "static1.squarespace.com",
+      },
+      {
+        protocol: "http",
         hostname: "static1.squarespace.com",
       },
       {
@@ -23,6 +31,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.teepublic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
       },
     ],
   },

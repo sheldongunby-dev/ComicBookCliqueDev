@@ -1,7 +1,7 @@
 import { getNews, getNewsBySlug, ContentItem } from "@/lib/content";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { ProseContent } from "@/components/editorial/ProseContent";
+import { PortableTextContent } from "@/components/editorial/PortableTextContent";
 import { formatDateShort } from "@/lib/utils/helpers";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -18,6 +18,8 @@ export async function generateStaticParams() {
         slug: item.slug,
     }));
 }
+
+export const revalidate = 30;
 
 export default async function NewsArticlePage({ params }: Props) {
     const { slug } = await params;
@@ -87,7 +89,7 @@ export default async function NewsArticlePage({ params }: Props) {
                     
                     <div className="card-cinematic bg-cbc-darker/65 backdrop-blur-2xl border border-white/5 shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden">
                         <div className="px-5 sm:px-12 py-10 sm:py-20">
-                            <ProseContent html={(article as any).rawMarkdoc || ""} />
+                            <PortableTextContent value={(article as any).content} />
                         </div>
                     </div>
 

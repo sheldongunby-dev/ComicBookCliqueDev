@@ -6,7 +6,7 @@ import { getReviewBySlug, getReviews } from "@/lib/content";
 import { formatDate } from "@/lib/utils/helpers";
 import { SectionShell } from "@/components/layout/SectionShell";
 import { ReviewCard } from "@/components/editorial/ReviewCard";
-import { ProseContent } from "@/components/editorial/ProseContent";
+import { PortableTextContent } from "@/components/editorial/PortableTextContent";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -19,6 +19,8 @@ export async function generateStaticParams() {
     const reviews = await getReviews();
     return reviews.map((r) => ({ slug: r.slug }));
 }
+
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
@@ -141,13 +143,7 @@ export default async function ReviewDetailPage({ params }: Props) {
                                     </p>
                                 )}
 
-                                {(review as any).rawMarkdoc ? (
-                                    <ProseContent html={(review as any).rawMarkdoc} />
-                                ) : (
-                                    <div className="text-cbc-muted leading-relaxed text-base space-y-4">
-                                        <p>This review has been imported from the original Comic Book Clique site. Full content available at the <a href={review.canonicalUrl} target="_blank" rel="noopener noreferrer" className="text-cbc-crimson hover:underline">original article ↗</a>.</p>
-                                    </div>
-                                )}
+                                <PortableTextContent value={(review as any).content} />
 
                                 {/* Rating verdict */}
                                 {review.rating !== undefined && (

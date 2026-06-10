@@ -1,4 +1,4 @@
-import { getFeaturedReviews, getReviews, getLatestNews, getPodcastEpisodes, getArticles, getNews } from "@/lib/content";
+import { getFeaturedReviews, getReviews, getLatestNews, getPodcastEpisodes, getArticles, getNews, getSiteSettings } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { EditorialHero } from "@/components/cinematic/EditorialHero";
 import { ReviewCard } from "@/components/editorial/ReviewCard";
@@ -28,7 +28,7 @@ const CATEGORY_HUBS = [
 ];
 
 export default async function HomePage() {
-    const featuredReviews = await getFeaturedReviews();
+    const settings = await getSiteSettings();
     const latestNews = await getLatestNews(5);
     const podcastEpisodes = await getPodcastEpisodes();
     const topPodcasts = podcastEpisodes.slice(0, 4);
@@ -37,15 +37,22 @@ export default async function HomePage() {
     const featuredList = allReviews.filter(r => r.featured);
     const topReviews = featuredList.length >= 9 ? featuredList : allReviews;
     
-    const heroReviews = topReviews.slice(0, 3) as any[];
+    // Resolve hero articles either from settings manually, or auto fallback
+    let heroReviews = topReviews.slice(0, 3) as any[];
+    if (settings?.manualHeroArticles && settings.manualHeroArticles.length > 0) {
+        heroReviews = settings.manualHeroArticles;
+    }
+    
     const gridReviews = topReviews.slice(3, 9);
     
     const latestEpisode = topPodcasts[0];
 
+    const showHero = settings?.showHero ?? true;
+
     return (
         <>
             {/* ── Editorial Hero Carousel ── */}
-            <EditorialHero featuredStories={heroReviews} />
+            {showHero && <EditorialHero featuredStories={heroReviews} />}
 
             {/* ── News + Podcast Split ── */}
             <SectionShell background="darker" id="news-podcast">
@@ -249,7 +256,7 @@ export default async function HomePage() {
                         </p>
                         <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                             <a
-                                href="https://www.teepublic.com/stores/comicbook-clique?utm_campaign=9513&utm_medium=affiliate&utm_source=ComicBook%2BClique"
+                                href={settings?.merchMainLink || "https://www.teepublic.com/stores/comicbook-clique?utm_campaign=9513&utm_medium=affiliate&utm_source=ComicBook%2BClique"}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-8 py-4 bg-cbc-gold hover:bg-cbc-gold-dim text-cbc-black font-heading font-bold uppercase tracking-widest rounded-cbc transition-all duration-300 shadow-cbc-gold text-sm flex items-center gap-2 group"
@@ -261,45 +268,72 @@ export default async function HomePage() {
                     </div>
 
                     <div className="relative flex-1 w-full max-w-lg mx-auto grid grid-cols-2 gap-4 lg:gap-6">
-                        {/* We The Worthy Tee */}
-                        <a 
-                            href="https://www.teepublic.com/t-shirt/59681125-acknowledge-the-motto?store_id=222268" 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="group relative aspect-[4/5] rounded-xl bg-cbc-darker border border-cbc-border overflow-hidden flex flex-col items-center justify-center hover:border-cbc-gold/40 transition-colors shadow-xl"
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-t from-cbc-black/95 via-cbc-black/25 to-transparent z-10 flex flex-col justify-end p-5 transition-opacity duration-300">
-                                <span className="text-cbc-white font-heading text-sm text-center uppercase tracking-wider group-hover:text-cbc-gold transition-colors">We The Worthy Tee</span>
-                            </div>
-                            <Image 
-                                src="https://images.teepublic.com/derived/production/designs/59681125_2/1714066412/i_p:c_191919,s_313,q_90.jpg" 
-                                alt="We The Worthy Tee" 
-                                fill 
-                                className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" 
-                                sizes="(max-width: 640px) 50vw, 25vw"
-                                loading="lazy" 
-                            />
-                        </a>
-
-                        {/* Red Guardian Limo Service Tee */}
-                        <a 
-                            href="https://www.teepublic.com/t-shirt/74864888-red-guardian-limo-service?store_id=222268" 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="group relative aspect-[4/5] rounded-xl bg-cbc-darker border border-cbc-border overflow-hidden flex flex-col items-center justify-center hover:border-cbc-crimson/40 transition-colors shadow-xl lg:translate-y-8"
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-t from-cbc-black/95 via-cbc-black/25 to-transparent z-10 flex flex-col justify-end p-5 transition-opacity duration-300">
-                                <span className="text-cbc-white font-heading text-sm text-center uppercase tracking-wider group-hover:text-cbc-crimson transition-colors">Red Guardian Tee</span>
-                            </div>
-                            <Image 
-                                src="https://images.teepublic.com/derived/production/designs/74864888_2/1746412153/i_p:c_6e2229,s_313,q_90.jpg" 
-                                alt="Red Guardian Limo Service Tee" 
-                                fill 
-                                className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" 
-                                sizes="(max-width: 640px) 50vw, 25vw"
-                                loading="lazy" 
-                            />
-                        </a>
+                        {settings?.merchItems?.length > 0 ? (
+                            settings.merchItems.map((item: any, idx: number) => (
+                                <a 
+                                    key={idx}
+                                    href={item.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className={`group relative aspect-[4/5] rounded-xl bg-cbc-darker border border-cbc-border overflow-hidden flex flex-col items-center justify-center hover:border-cbc-gold/40 transition-colors shadow-xl ${idx === 1 ? 'lg:translate-y-8' : ''}`}
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-t from-cbc-black/95 via-cbc-black/25 to-transparent z-10 flex flex-col justify-end p-5 transition-opacity duration-300">
+                                        <span className={`text-cbc-white font-heading text-sm text-center uppercase tracking-wider group-hover:${item.hoverColor || 'text-cbc-gold'} transition-colors`}>
+                                            {item.title}
+                                        </span>
+                                    </div>
+                                    <Image 
+                                        src={item.image} 
+                                        alt={item.title} 
+                                        fill 
+                                        className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" 
+                                        sizes="(max-width: 640px) 50vw, 25vw"
+                                        loading="lazy" 
+                                    />
+                                </a>
+                            ))
+                        ) : (
+                            <>
+                                {/* Fallback Hardcoded Merch items */}
+                                <a 
+                                    href="https://www.teepublic.com/t-shirt/59681125-acknowledge-the-motto?store_id=222268" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="group relative aspect-[4/5] rounded-xl bg-cbc-darker border border-cbc-border overflow-hidden flex flex-col items-center justify-center hover:border-cbc-gold/40 transition-colors shadow-xl"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-t from-cbc-black/95 via-cbc-black/25 to-transparent z-10 flex flex-col justify-end p-5 transition-opacity duration-300">
+                                        <span className="text-cbc-white font-heading text-sm text-center uppercase tracking-wider group-hover:text-cbc-gold transition-colors">We The Worthy Tee</span>
+                                    </div>
+                                    <Image 
+                                        src="https://images.teepublic.com/derived/production/designs/59681125_2/1714066412/i_p:c_191919,s_313,q_90.jpg" 
+                                        alt="We The Worthy Tee" 
+                                        fill 
+                                        className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" 
+                                        sizes="(max-width: 640px) 50vw, 25vw"
+                                        loading="lazy" 
+                                    />
+                                </a>
+        
+                                <a 
+                                    href="https://www.teepublic.com/t-shirt/74864888-red-guardian-limo-service?store_id=222268" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="group relative aspect-[4/5] rounded-xl bg-cbc-darker border border-cbc-border overflow-hidden flex flex-col items-center justify-center hover:border-cbc-crimson/40 transition-colors shadow-xl lg:translate-y-8"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-t from-cbc-black/95 via-cbc-black/25 to-transparent z-10 flex flex-col justify-end p-5 transition-opacity duration-300">
+                                        <span className="text-cbc-white font-heading text-sm text-center uppercase tracking-wider group-hover:text-cbc-crimson transition-colors">Red Guardian Tee</span>
+                                    </div>
+                                    <Image 
+                                        src="https://images.teepublic.com/derived/production/designs/74864888_2/1746412153/i_p:c_6e2229,s_313,q_90.jpg" 
+                                        alt="Red Guardian Limo Service Tee" 
+                                        fill 
+                                        className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" 
+                                        sizes="(max-width: 640px) 50vw, 25vw"
+                                        loading="lazy" 
+                                    />
+                                </a>
+                            </>
+                        )}
                     </div>
                 </div>
             </SectionShell>
@@ -330,14 +364,14 @@ export default async function HomePage() {
                     <p className="text-sm text-cbc-faint font-label tracking-widest uppercase mb-2">Partner With Us</p>
                     <h3 className="text-cbc-muted font-heading text-lg mb-3">Reach the Fandom</h3>
                     <p className="text-xs text-cbc-faint max-w-sm mx-auto mb-4">
-                        Comic Book Clique reaches thousands of passionate comic readers and pop culture fans weekly.
+                        {settings?.sponsorText || "Comic Book Clique reaches thousands of passionate comic readers and pop culture fans weekly."}
                     </p>
-                    <Link
-                        href="/contact"
+                    <a 
+                        href={settings?.sponsorEmail || "/contact"}
                         className="inline-flex items-center gap-2 px-5 py-2.5 border border-cbc-border hover:border-cbc-gold/40 text-sm font-heading font-semibold text-cbc-muted hover:text-cbc-gold rounded-cbc transition-all duration-300 tracking-wide"
                     >
                         Sponsorship Inquiries <ArrowRight size={14} />
-                    </Link>
+                    </a>
                 </div>
             </SectionShell>
         </>
