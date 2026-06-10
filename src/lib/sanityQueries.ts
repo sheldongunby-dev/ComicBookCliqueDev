@@ -11,7 +11,7 @@ const authorFragment = groq`
 // ── Hero image fragment ──
 const heroImageFragment = groq`
   "heroImage": {
-    "url": coalesce(heroImage.asset->url, _heroImageUrl),
+    "url": coalesce(heroImage.asset->url, heroImage.url, _heroImageUrl),
     "alt": coalesce(heroImage.alt, _heroImageAlt),
     "caption": heroImage.caption,
     "hotspot": heroImage.hotspot,

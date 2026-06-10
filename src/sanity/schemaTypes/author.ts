@@ -21,7 +21,7 @@ export const author = defineType({
     defineField({
       name: 'avatar',
       title: 'Profile Photo',
-      type: 'image',
+      type: 'r2-image',
       options: { hotspot: true },
     }),
     defineField({

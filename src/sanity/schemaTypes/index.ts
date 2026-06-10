@@ -7,7 +7,8 @@ import { podcastReview } from './podcastReview'
 import { interview } from './interview'
 import { author } from './author'
 import { siteSettings } from './siteSettings'
+import { r2Image } from './r2Image'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [author, article, news, review, podcast, podcastReview, interview, siteSettings],
+  types: [author, article, news, review, podcast, podcastReview, interview, siteSettings, r2Image],
 }

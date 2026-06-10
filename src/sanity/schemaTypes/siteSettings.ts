@@ -52,7 +52,7 @@ export const siteSettings = defineType({
           fields: [
             defineField({ name: 'title', title: 'Item Title', type: 'string' }),
             defineField({ name: 'url', title: 'Store URL', type: 'url' }),
-            defineField({ name: 'image', title: 'Item Image', type: 'image', options: { hotspot: true } }),
+            defineField({ name: 'image', title: 'Item Image', type: 'r2-image', options: { hotspot: true } }),
             defineField({ name: 'hoverColor', title: 'Hover Color Class', type: 'string', description: 'e.g., text-cbc-gold or text-cbc-crimson', initialValue: 'text-cbc-gold' }),
           ],
         }

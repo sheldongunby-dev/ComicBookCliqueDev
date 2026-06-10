@@ -37,7 +37,7 @@ export const podcast = defineType({
     defineField({
       name: 'heroImage',
       title: 'Thumbnail / Cover Art',
-      type: 'image',
+      type: 'r2-image',
       group: 'content',
       options: { hotspot: true },
       fields: [
@@ -155,7 +155,7 @@ export const podcast = defineType({
     defineField({
       name: 'ogImage',
       title: 'Social Share Image',
-      type: 'image',
+      type: 'r2-image',
       group: 'seo',
     }),
   ],

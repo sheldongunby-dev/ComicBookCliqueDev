@@ -51,7 +51,7 @@ export const richTextBody = {
     },
     // Inline images with caption + alt text
     {
-      type: 'image',
+      type: 'r2-image',
       options: { hotspot: true },
       fields: [
         { name: 'alt', type: 'string', title: 'Alt text', description: 'Required for accessibility' },
@@ -134,7 +134,7 @@ export const article = defineType({
     defineField({
       name: 'heroImage',
       title: 'Hero Image',
-      type: 'image',
+      type: 'r2-image',
       group: 'content',
       options: { hotspot: true },
       fields: [
@@ -227,7 +227,7 @@ export const article = defineType({
     defineField({
       name: 'ogImage',
       title: 'Social Share Image (OG Image)',
-      type: 'image',
+      type: 'r2-image',
       group: 'seo',
       description: 'Image shown when this article is shared on social media. Recommended: 1200×630px.',
     }),
