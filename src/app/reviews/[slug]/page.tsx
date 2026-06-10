@@ -17,7 +17,7 @@ interface Props {
 
 export async function generateStaticParams() {
     const reviews = await getReviews();
-    return reviews.map((r) => ({ slug: r.slug }));
+    return reviews.slice(0, 50).map((r) => ({ slug: r.slug }));
 }
 
 export const revalidate = 60;
@@ -98,7 +98,7 @@ export default async function ReviewDetailPage({ params }: Props) {
                                 {review.publisher}
                             </span>
                         )}
-                        {review.tags?.slice(0, 2).map((tag) => (
+                        {review.tags?.slice(0, 2).slice(0, 50).map((tag) => (
                             <span key={tag} className="tag-chip bg-cbc-elevated border border-cbc-border text-cbc-muted">
                                 {tag}
                             </span>
@@ -183,7 +183,7 @@ export default async function ReviewDetailPage({ params }: Props) {
                 <SectionShell background="darker">
                     <h2 className="font-heading text-xl font-bold text-cbc-white mb-6">More Reviews</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {related.map((r) => (
+                        {related.slice(0, 50).map((r) => (
                             <ReviewCard key={r.id} review={r} variant="compact" />
                         ))}
                     </div>

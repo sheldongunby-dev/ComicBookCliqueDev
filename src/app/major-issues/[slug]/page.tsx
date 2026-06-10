@@ -13,7 +13,7 @@ interface Props {
 
 export async function generateStaticParams() {
     const episodes = await getPodcastEpisodes();
-    return episodes.map((e) => ({
+    return episodes.slice(0, 50).map((e) => ({
         slug: e.slug,
     }));
 }
