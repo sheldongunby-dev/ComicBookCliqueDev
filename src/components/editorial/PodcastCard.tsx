@@ -29,18 +29,16 @@ export function PodcastCard({ episode, variant = "default", className }: Podcast
             >
                 <div className="flex flex-col sm:flex-row gap-0">
                     {/* Image */}
-                    {episode.heroImage && (
-                        <div className="relative w-full sm:w-48 aspect-square shrink-0 overflow-hidden">
-                            <Image
-                                src={episode.heroImage.url}
-                                alt={episode.heroImage.alt || episode.title}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                sizes="(max-width: 640px) 100vw, 192px"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-cbc-surface/40" />
-                        </div>
-                    )}
+                    <div className="relative w-full sm:w-48 aspect-square shrink-0 overflow-hidden bg-cbc-charcoal">
+                        <Image
+                            src={episode.heroImage?.url || "/images/podbean-fallback.jpg"}
+                            alt={episode.heroImage?.alt || episode.title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            sizes="(max-width: 640px) 100vw, 192px"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-cbc-surface/40" />
+                    </div>
 
                     {/* Content */}
                     <div className="p-6 flex flex-col justify-between">
@@ -102,19 +100,13 @@ export function PodcastCard({ episode, variant = "default", className }: Podcast
                     "relative overflow-hidden bg-cbc-charcoal",
                     isCompact ? "aspect-[4/3]" : "aspect-square"
                 )}>
-                    {episode.heroImage ? (
-                        <Image
-                            src={episode.heroImage.url}
-                            alt={episode.heroImage.alt || episode.title}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            sizes="(max-width: 768px) 50vw, 25vw"
-                        />
-                    ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-cbc-purple/20 to-cbc-charcoal">
-                            <Mic size={40} className="text-cbc-purple/40" />
-                        </div>
-                    )}
+                    <Image
+                        src={episode.heroImage?.url || "/images/podbean-fallback.jpg"}
+                        alt={episode.heroImage?.alt || episode.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-cbc-black/80 via-transparent to-transparent" />
 
                     <div className="absolute top-3 left-3">

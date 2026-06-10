@@ -45,21 +45,19 @@ export function DsrCard({ episode, variant = "compact" }: DsrCardProps) {
     if (variant === "featured") {
         return (
             <div className="relative rounded-2xl overflow-hidden border border-dsr-orange/20 bg-gradient-to-br from-[#1a0e00] to-[#0d0d10] group hover:border-dsr-orange/40 transition-all duration-500 shadow-cinematic-orange">
-                {episode.heroImage && (
-                    <div className="relative w-full h-64 overflow-hidden">
-                        <Image
-                            src={episode.heroImage.url}
-                            alt={episode.heroImage.alt || episode.title}
-                            fill
-                            className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d10] via-[#0d0d10]/60 to-transparent" />
-                        {/* Waveform overlay */}
-                        <div className="absolute bottom-4 left-4">
-                            <Waveform color="#FF6B00" bars={16} />
-                        </div>
+                <div className="relative w-full h-64 overflow-hidden">
+                    <Image
+                        src={episode.heroImage?.url || "/images/podbean-fallback.jpg"}
+                        alt={episode.heroImage?.alt || episode.title}
+                        fill
+                        className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d10] via-[#0d0d10]/60 to-transparent" />
+                    {/* Waveform overlay */}
+                    <div className="absolute bottom-4 left-4">
+                        <Waveform color="#FF6B00" bars={16} />
                     </div>
-                )}
+                </div>
                 <div className="p-6">
                     <div className="flex items-center gap-3 mb-3">
                         <span className="flex items-center gap-1.5 px-2.5 py-1 bg-dsr-orange/20 border border-dsr-orange/30 rounded-sm">
@@ -105,15 +103,9 @@ export function DsrCard({ episode, variant = "compact" }: DsrCardProps) {
                 href={`/podcast/${episode.slug}`}
                 className="group flex items-center gap-4 p-4 rounded-xl border border-white/5 hover:border-dsr-orange/30 bg-white/[0.02] hover:bg-dsr-orange/5 transition-all duration-300"
             >
-                {episode.heroImage ? (
-                    <div className="relative w-14 h-14 rounded-lg overflow-hidden shrink-0">
-                        <Image src={episode.heroImage.url} alt={episode.heroImage.alt || episode.title} fill className="object-cover" />
-                    </div>
-                ) : (
-                    <div className="w-14 h-14 rounded-lg bg-dsr-orange/10 border border-dsr-orange/20 flex items-center justify-center shrink-0">
-                        <Radio size={20} className="text-dsr-orange" />
-                    </div>
-                )}
+                <div className="relative w-14 h-14 rounded-lg overflow-hidden shrink-0">
+                    <Image src={episode.heroImage?.url || "/images/podbean-fallback.jpg"} alt={episode.heroImage?.alt || episode.title} fill className="object-cover" />
+                </div>
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                         {episode.episodeNumber && (
@@ -141,15 +133,13 @@ export function DsrCard({ episode, variant = "compact" }: DsrCardProps) {
             href={`/podcast/${episode.slug}`}
             className="group block rounded-xl overflow-hidden border border-white/5 hover:border-dsr-orange/30 bg-white/[0.02] hover:shadow-cinematic-orange transition-all duration-300"
         >
-            {episode.heroImage && (
-                <div className="relative w-full h-36 overflow-hidden">
-                    <Image src={episode.heroImage.url} alt={episode.heroImage.alt || episode.title} fill className="object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                    <div className="absolute bottom-2 left-2">
-                        <Waveform color="#FF6B00" bars={8} />
-                    </div>
+            <div className="relative w-full h-36 overflow-hidden">
+                <Image src={episode.heroImage?.url || "/images/podbean-fallback.jpg"} alt={episode.heroImage?.alt || episode.title} fill className="object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                <div className="absolute bottom-2 left-2">
+                    <Waveform color="#FF6B00" bars={8} />
                 </div>
-            )}
+            </div>
             <div className="p-3">
                 <div className="flex items-center gap-1.5 mb-1.5">
                     <Radio size={10} className="text-dsr-orange" />

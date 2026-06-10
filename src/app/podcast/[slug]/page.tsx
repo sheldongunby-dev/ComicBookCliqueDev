@@ -32,19 +32,13 @@ export default async function PodcastEpisodePage({ params }: Props) {
         <article className="min-h-screen bg-cbc-surface pb-24">
             {/* Hero Section */}
             <div className="relative w-full h-[50vh] min-h-[400px] bg-cbc-darker">
-                {episode.heroImage ? (
-                    <Image
-                        src={episode.heroImage.url}
-                        alt={episode.heroImage.alt || episode.title}
-                        fill
-                        className="object-cover opacity-60 mix-blend-overlay"
-                        priority
-                    />
-                ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-cbc-purple/10 to-transparent flex items-center justify-center">
-                        <Mic size={120} className="text-cbc-purple/20" />
-                    </div>
-                )}
+                <Image
+                    src={episode.heroImage?.url || "/images/podbean-fallback.jpg"}
+                    alt={episode.heroImage?.alt || episode.title}
+                    fill
+                    className="object-cover opacity-60 mix-blend-overlay"
+                    priority
+                />
                 {/* Cinematic Vignette */}
                 <div className="absolute inset-0 shadow-[inset_0_-100px_100px_rgba(10,12,16,1)] pointer-events-none" />
                 
