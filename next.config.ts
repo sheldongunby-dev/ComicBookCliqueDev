@@ -1,11 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  outputFileTracingIncludes: {
-    "/*": ["./src/content/**/*"],
-    "/**": ["./src/content/**/*"],
-    "/": ["./src/content/**/*"]
-  },
+
   images: {
     remotePatterns: [
       {

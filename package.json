@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "scrape": "node scripts/scrape-all-content.js && node scripts/migrate-to-keystatic.js && node scripts/scrape-podbean.js && node scripts/fix-episode-numbers.js",
-    "build": "node scripts/migrate-to-keystatic.js && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
