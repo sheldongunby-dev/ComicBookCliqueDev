@@ -14,6 +14,7 @@ import { ArrowRight, Star, Newspaper, Mic, Zap, Gamepad2, Tv, ShoppingBag, Radio
 import { formatDateShort } from "@/lib/utils/helpers";
 import type { Metadata } from "next";
 import { NewsletterForm } from "@/components/layout/NewsletterForm";
+import { NewArticleToast } from "@/components/ui/NewArticleToast";
 
 
 export const metadata: Metadata = buildMetadata();
@@ -48,6 +49,18 @@ export default async function HomePage() {
     const latestEpisode = topPodcasts[0];
 
     const showHero = settings?.showHero ?? true;
+
+    // Check if the latest article is within 48 hours
+    const allArticles = await getArticles();
+    const latestArticle = allArticles?.[0] as any;
+    let showNewArticleToast = false;
+    if (latestArticle?.publishDate) {
+        const publishTime = new Date(latestArticle.publishDate).getTime();
+        const now = new Date().getTime();
+        if (now - publishTime < 48 * 60 * 60 * 1000) {
+            showNewArticleToast = true;
+        }
+    }
 
     return (
         <>
@@ -374,6 +387,11 @@ export default async function HomePage() {
                     </a>
                 </div>
             </SectionShell>
+
+            {/* ── New Article Toast ── */}
+            {showNewArticleToast && latestArticle && (
+                <NewArticleToast article={latestArticle} />
+            )}
         </>
     );
 }
