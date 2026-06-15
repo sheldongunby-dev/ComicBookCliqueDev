@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils/helpers";
 
@@ -49,7 +49,6 @@ const accentBgMap: Record<string, string> = {
 
 export function SiteHeader() {
     const [scrolled, setScrolled] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isLive, setIsLive] = useState(false);
 
@@ -235,104 +234,9 @@ export function SiteHeader() {
                         </Link>
                     </div>
 
-                    {/* Mobile menu toggle */}
-                    <button
-                        className="md:hidden p-2 text-cbc-muted hover:text-cbc-white transition-colors focus-cbc"
-                        onClick={() => setMobileOpen(!mobileOpen)}
-                        aria-label={mobileOpen ? "Close menu" : "Open menu"}
-                    >
-                        {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+                    {/* Mobile menu toggle — removed; replaced by MobileBottomNav */}
                 </nav>
             </header>
-
-            {/* Mobile Menu */}
-            <AnimatePresence>
-                {mobileOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, x: "100%" }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: "100%" }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed inset-0 z-40 bg-cbc-darker/98 backdrop-blur-md flex flex-col pt-20 px-6 pb-8 overflow-y-auto"
-                    >
-                        <div className="flex flex-col gap-2">
-                            {NAV_LINKS.map((link) => {
-                                if (link.label === "More") {
-                                    return (
-                                        <div key="more" className="flex flex-col gap-1">
-                                            {link.children?.map((child) => (
-                                                <Link
-                                                    key={child.href}
-                                                    href={child.href}
-                                                    onClick={() => setMobileOpen(false)}
-                                                    className="py-3 text-lg font-heading text-cbc-muted hover:text-cbc-white pl-4 border-l border-cbc-border hover:border-cbc-gold transition-all duration-200"
-                                                >
-                                                    {child.label}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    );
-                                }
-
-                                const accent = "accent" in link ? link.accent : "none";
-                                const colorClass =
-                                    accent === "crimson" ? "text-cbc-crimson" :
-                                        accent === "gold" ? "text-cbc-gold" :
-                                            accent === "cyan" ? "text-cbc-cyan" :
-                                                accent === "purple" ? "text-cbc-purple" :
-                                                    accent === "orange" ? "text-dsr-orange" :
-                                                    "text-cbc-white";
-
-                                return (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        onClick={() => setMobileOpen(false)}
-                                        className={cn(
-                                            "py-3 text-2xl font-heading font-bold transition-colors duration-200 flex items-center gap-2", 
-                                            colorClass
-                                        )}
-                                    >
-                                        {link.label}
-                                        {link.label === "DSR" && isLive && (
-                                            <>
-                                                <span className="w-2 h-2 rounded-full bg-dsr-orange animate-on-air" />
-                                                <span className="text-[10px] font-mono tracking-widest text-dsr-orange uppercase font-semibold py-0.5 px-1.5 rounded-sm bg-dsr-orange/10 border border-dsr-orange/20">LIVE</span>
-                                            </>
-                                        )}
-                                    </Link>
-                                );
-                            })}
-                        </div>
-
-                        <div className="mt-6 pt-6 border-t border-cbc-border flex flex-col gap-3">
-                            <Link
-                                href="/merch"
-                                onClick={() => setMobileOpen(false)}
-                                className="text-center py-3 border border-cbc-gold/40 text-cbc-gold font-heading font-semibold rounded-cbc hover:bg-cbc-gold hover:text-cbc-black transition-all duration-300 tracking-wide"
-                            >
-                                Shop Merch
-                            </Link>
-                            <Link
-                                href="/major-issues"
-                                onClick={() => setMobileOpen(false)}
-                                className="text-center py-3 bg-cbc-purple text-white font-heading font-semibold rounded-cbc hover:bg-cbc-purple/80 transition-all duration-300 tracking-wide shadow-cbc"
-                            >
-                                Listen to Major Issues
-                            </Link>
-                        </div>
-
-                        {/* Social links */}
-                        <div className="mt-auto pt-6 flex items-center gap-4">
-                            <a href="https://www.youtube.com/comicbookclique" target="_blank" rel="noopener noreferrer" className="text-cbc-muted hover:text-cbc-crimson transition-colors text-sm font-label tracking-widest uppercase">YT</a>
-                            <a href="https://www.instagram.com/comicbookclique" target="_blank" rel="noopener noreferrer" className="text-cbc-muted hover:text-cbc-gold transition-colors text-sm font-label tracking-widest uppercase">IG</a>
-                            <a href="https://open.spotify.com/show/6JieQia6J6lQ8vU4Mj3djK" target="_blank" rel="noopener noreferrer" className="text-cbc-muted hover:text-cbc-cyan transition-colors text-sm font-label tracking-widest uppercase">Spotify</a>
-                            <a href="https://www.x.com/MajorIssuesCBC" target="_blank" rel="noopener noreferrer" className="text-cbc-muted hover:text-cbc-white transition-colors text-sm font-label tracking-widest uppercase">X</a>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </>
     );
 }

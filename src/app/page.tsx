@@ -8,6 +8,7 @@ import { DsrCard } from "@/components/editorial/DsrCard";
 import { InterviewCard } from "@/components/editorial/InterviewCard";
 import { SectionShell, SectionHeader } from "@/components/layout/SectionShell";
 import { FadeIn } from "@/components/motion/FadeIn";
+import { MobileFeedWithChips } from "@/components/mobile/MobileFeedWithChips";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Star, Newspaper, Mic, Zap, Gamepad2, Tv, ShoppingBag, Radio, Headphones } from "lucide-react";
@@ -67,7 +68,18 @@ export default async function HomePage() {
             {/* ── Editorial Hero Carousel ── */}
             {showHero && <EditorialHero featuredStories={heroReviews} />}
 
-            {/* ── News + Podcast Split ── */}
+            {/* ── Mobile Feed (chips + cards) — hidden on desktop ── */}
+            <div className="md:hidden">
+                <MobileFeedWithChips
+                    reviews={topReviews.slice(0, 10)}
+                    news={latestNews}
+                    articles={allArticles.slice(0, 10)}
+                    podcasts={topPodcasts}
+                />
+            </div>
+
+            {/* ── News + Podcast Split (desktop only) ── */}
+            <div className="hidden md:block">
             <SectionShell background="darker" id="news-podcast">
                 <div className="grid lg:grid-cols-[1fr_400px] gap-12">
                     {/* News column */}
@@ -392,6 +404,7 @@ export default async function HomePage() {
             {showNewArticleToast && latestArticle && (
                 <NewArticleToast article={latestArticle} />
             )}
+            </div>{/* end desktop-only */}
         </>
     );
 }

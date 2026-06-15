@@ -477,3 +477,104 @@ html[data-contrast="high-light"] .h-\[2px\].w-full.bg-gradient-to-r {
   pointer-events: none;
   z-index: 9998;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE-FIRST OVERHAUL
+   All rules here ONLY apply at < 768px (md breakpoint).
+   Desktop is completely untouched.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+
+  /* ── Phase 4: Performance — disable GPU-heavy texture overlays ── */
+
+  /* Noise texture is an SVG filter — expensive on mobile */
+  .noise::before {
+    display: none !important;
+  }
+
+  /* Scanlines are a repeating-gradient with pointer-events — kill on mobile */
+  .scanlines::after {
+    display: none !important;
+  }
+
+  /* Halftone is cheap but redundant at mobile size */
+  .halftone {
+    background-image: none !important;
+  }
+
+  /* Hover transform on cards doesn't apply on touch — remove the GPU layer */
+  .card-cinematic:hover {
+    transform: none !important;
+  }
+
+  /* ── Phase 3: Article reading experience ── */
+
+  /* h2 inside article body: scale down from desktop 4xl to a comfortable 2xl */
+  .portable-text-body h2 {
+    font-size: 1.5rem !important;   /* text-2xl */
+    margin-top: 2.5rem !important;
+    margin-bottom: 1rem !important;
+    padding-left: 1rem !important;  /* tighter border-l indent */
+    border-left-width: 3px !important;
+  }
+
+  /* h3: from 2xl to xl */
+  .portable-text-body h3 {
+    font-size: 1.25rem !important;  /* text-xl */
+    margin-top: 2rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* h4 */
+  .portable-text-body h4 {
+    font-size: 1.125rem !important; /* text-lg */
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Body paragraphs: bump from text-lg (18px) to a comfortable 17px with
+     generous line-height. Slightly reduce the huge desktop mb-8 gaps. */
+  .portable-text-body p {
+    font-size: 1.0625rem !important; /* 17px */
+    line-height: 1.75 !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  /* Blockquote: scale down from huge desktop 2xl */
+  .portable-text-body blockquote {
+    font-size: 1.125rem !important;
+    padding-left: 1.25rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    margin-top: 1.75rem !important;
+    margin-bottom: 1.75rem !important;
+  }
+
+  /* Lists: tighter spacing on mobile */
+  .portable-text-body ul,
+  .portable-text-body ol {
+    margin-bottom: 1.25rem !important;
+  }
+
+  /* Drop cap: slightly smaller on mobile so it doesn't dominate */
+  .drop-cap {
+    font-size: 3.5rem !important;
+    margin-right: 0.5rem !important;
+  }
+
+  /* Article images: full-bleed on mobile (no rounded corners, extend to edges) */
+  .portable-text-body figure {
+    margin-left: -1rem !important;
+    margin-right: -1rem !important;
+    border-radius: 0 !important;
+  }
+  .portable-text-body figure > div {
+    border-radius: 0 !important;
+  }
+
+  /* Filter chip scrollbar — hide on mobile (already styled above but ensure) */
+  .chip-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}

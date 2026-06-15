@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { LiveTicker } from "@/components/cinematic/LiveTicker";
 import { buildMetadata, organizationJsonLd } from "@/lib/seo/metadata";
 import { AccessibilityProvider } from "@/lib/context/AccessibilityContext";
@@ -87,9 +88,10 @@ export default async function RootLayout({
                             */}
                             <SiteHeader />
                             <LiveTicker headlines={headlines} />
-                            <main className="flex-1 relative z-10">{children}</main>
+                            <main className="flex-1 relative z-10 pb-20 md:pb-0">{children}</main>
                             <SiteFooter />
                             <AccessibilityPanel />
+                            <MobileBottomNav />
                         </>
                 </AccessibilityProvider>
             </body>
