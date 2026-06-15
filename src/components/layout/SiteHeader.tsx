@@ -13,7 +13,7 @@ const NAV_LINKS = [
     { label: "Reviews", href: "/reviews", accent: "crimson" },
     { label: "News", href: "/news", accent: "gold" },
     { label: "Features", href: "/features", accent: "cyan" },
-    { label: "Podcast", href: "/podcast", accent: "purple" },
+    { label: "Major Issues", href: "/major-issues", accent: "purple" },
     { label: "DSR", href: "/dirtsheetradio", accent: "orange" },
     {
         label: "More",
@@ -166,6 +166,18 @@ export function SiteHeader() {
                                 );
                             }
 
+                            if (link.label === "Major Issues") {
+                                return (
+                                    <Link
+                                        key="major-issues"
+                                        href="/major-issues"
+                                        className="flex items-center gap-1.5 px-3 py-1.5 text-base font-heading font-bold text-cbc-purple border border-cbc-purple/30 rounded-sm transition-all duration-200 hover:bg-cbc-purple hover:text-white"
+                                    >
+                                        Major Issues
+                                    </Link>
+                                );
+                            }
+
                             const accent = "accent" in link ? link.accent : "none";
 
                             return (
@@ -217,8 +229,8 @@ export function SiteHeader() {
                             Shop Merch
                         </Link>
                         <Link
-                            href="/podcast"
-                            className="px-4 py-2 text-base font-heading font-semibold bg-cbc-crimson hover:bg-cbc-crimson-dim text-white rounded-cbc transition-all duration-300 tracking-wide shadow-cbc"
+                            href="/major-issues"
+                            className="px-4 py-2 text-base font-heading font-semibold bg-cbc-purple hover:bg-cbc-purple/80 text-white rounded-cbc transition-all duration-300 tracking-wide shadow-cbc"
                         >
                             Listen
                         </Link>
@@ -304,9 +316,9 @@ export function SiteHeader() {
                                 Shop Merch
                             </Link>
                             <Link
-                                href="/podcast"
+                                href="/major-issues"
                                 onClick={() => setMobileOpen(false)}
-                                className="text-center py-3 bg-cbc-crimson text-white font-heading font-semibold rounded-cbc hover:bg-cbc-crimson-dim transition-all duration-300 tracking-wide shadow-cbc"
+                                className="text-center py-3 bg-cbc-purple text-white font-heading font-semibold rounded-cbc hover:bg-cbc-purple/80 transition-all duration-300 tracking-wide shadow-cbc"
                             >
                                 Listen to Major Issues
                             </Link>
