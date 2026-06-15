@@ -18,6 +18,9 @@ import {
   latestEpisodeQuery,
   podcastBySlugQuery,
   podcastSlugsQuery,
+  podcastsByCategoryQuery,
+  latestEpisodeByCategoryQuery,
+  podcastSlugsByCategoryQuery,
   podcastReviewsQuery,
   homepageFeaturedQuery,
   siteSettingsQuery,
@@ -125,6 +128,24 @@ export async function getEpisodeBySlug(slug: string): Promise<PodcastEpisode | u
 
 export async function getPodcastSlugs(): Promise<string[]> {
   const data = await sanityClient.fetch(podcastSlugsQuery, {}, { next: { revalidate: 300 } })
+  return (data ?? []).map((d: any) => d.slug).filter(Boolean)
+}
+
+// ── Category-filtered podcast fetchers ──
+
+export async function getPodcastEpisodesByCategory(category: string): Promise<PodcastEpisode[]> {
+  const data = await sanityClient.fetch(podcastsByCategoryQuery, { category }, { next: { revalidate: 60 } })
+  return (data ?? []).map(normalizeItem('podcast'))
+}
+
+export async function getLatestEpisodeByCategory(category: string): Promise<PodcastEpisode | undefined> {
+  const data = await sanityClient.fetch(latestEpisodeByCategoryQuery, { category }, { next: { revalidate: 60 } })
+  if (!data) return undefined
+  return normalizeItem('podcast')(data)
+}
+
+export async function getPodcastSlugsByCategory(category: string): Promise<string[]> {
+  const data = await sanityClient.fetch(podcastSlugsByCategoryQuery, { category }, { next: { revalidate: 300 } })
   return (data ?? []).map((d: any) => d.slug).filter(Boolean)
 }
 

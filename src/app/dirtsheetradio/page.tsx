@@ -1,7 +1,8 @@
 import { buildMetadata } from "@/lib/seo/metadata";
-import { getNews } from "@/lib/content";
+import { getNews, getPodcastEpisodesByCategory } from "@/lib/content";
 import { DsrLiveStream } from "@/components/editorial/DsrLiveStream";
 import { NewsCard } from "@/components/editorial/NewsCard";
+import { PodcastCard } from "@/components/editorial/PodcastCard";
 import Link from "next/link";
 import { Radio, Mic2, Headphones, ExternalLink, Play, Zap, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
@@ -26,23 +27,15 @@ const DSR_SHOW_LINKS = [
 ];
 
 export default async function DirtSheetRadioPage() {
-    // Load Keystatic news and filter for wrestling category
+    // Pull DSR episodes from the podcast collection (category filtered)
+    const dsrEpisodes = await getPodcastEpisodesByCategory('dirt-sheet-radio');
+
+    // Pull wrestling news separately for the sidebar
     const allNews = await getNews();
-    const wrestlingNewsAll = allNews.filter(n => n.category === 'wrestling');
+    const wrestlingNews = allNews
+        .filter(n => n.category === 'wrestling')
+        .sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
 
-    // Sort by publication date descending
-    const sortedWrestlingNews = wrestlingNewsAll.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
-
-    // Separate wrestling podcast episodes vs wrestling news articles
-    const dsrEpisodes = sortedWrestlingNews.filter(n => 
-        n.title.toLowerCase().includes('dirt sheet radio') || 
-        n.title.toLowerCase().includes('dsr') || 
-        n.title.toLowerCase().includes('episode') ||
-        n.tags?.some((t: string) => t.toLowerCase().includes('podcast'))
-    );
-    const wrestlingNews = sortedWrestlingNews.filter(n => !dsrEpisodes.some(ep => ep.id === n.id));
-
-    // Get slice of latest episodes and news
     const latestEpisode = dsrEpisodes[0];
     const recentEpisodes = dsrEpisodes.slice(1, 7);
     const recentWrestlingNews = wrestlingNews.slice(0, 6);
@@ -171,7 +164,7 @@ export default async function DirtSheetRadioPage() {
                                     {recentEpisodes.map((ep) => (
                                         <Link 
                                             key={ep.id} 
-                                            href={`/news/${ep.slug}`}
+                                            href={`/dirtsheetradio/${ep.slug}`}
                                             className="group flex gap-3 p-3 rounded-lg border border-white/5 bg-white/[0.01] hover:bg-dsr-orange/5 hover:border-dsr-orange/20 transition-all duration-200"
                                         >
                                             {ep.heroImage && (

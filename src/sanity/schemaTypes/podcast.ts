@@ -59,6 +59,13 @@ export const podcast = defineType({
       description: 'Direct link to this episode on Spotify',
     }),
     defineField({
+      name: 'audioUrl',
+      title: 'Audio File URL',
+      type: 'url',
+      group: 'media',
+      description: 'Direct link to the raw audio file (e.g., from Podbean)',
+    }),
+    defineField({
       name: 'appleUrl',
       title: 'Apple Podcasts URL',
       type: 'url',
@@ -91,6 +98,13 @@ export const podcast = defineType({
       title: 'Episode Number',
       type: 'number',
       group: 'meta',
+    }),
+    defineField({
+      name: 'podbeanId',
+      title: 'Podbean ID',
+      type: 'string',
+      group: 'meta',
+      hidden: true,
     }),
     defineField({
       name: 'category',

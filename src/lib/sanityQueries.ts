@@ -287,6 +287,57 @@ export const podcastSlugsQuery = groq`
   *[_type == "podcast"] { "slug": slug.current }
 `
 
+// ── Category-filtered podcast queries ──
+
+export const podcastsByCategoryQuery = groq`
+  *[_type == "podcast" && category == $category] | order(episodeNumber desc, publishDate desc) {
+    _id,
+    "type": _type,
+    "id": slug.current,
+    "slug": slug.current,
+    title,
+    publishDate,
+    category,
+    excerpt,
+    featured,
+    episodeNumber,
+    spotifyUrl,
+    appleUrl,
+    youtubeUrl,
+    audioUrl,
+    duration,
+    tags,
+    ${authorFragment},
+    ${heroImageFragment}
+  }
+`
+
+export const latestEpisodeByCategoryQuery = groq`
+  *[_type == "podcast" && category == $category] | order(episodeNumber desc, publishDate desc)[0] {
+    _id,
+    "type": _type,
+    "id": slug.current,
+    "slug": slug.current,
+    title,
+    publishDate,
+    category,
+    excerpt,
+    featured,
+    episodeNumber,
+    spotifyUrl,
+    appleUrl,
+    youtubeUrl,
+    audioUrl,
+    duration,
+    ${authorFragment},
+    ${heroImageFragment}
+  }
+`
+
+export const podcastSlugsByCategoryQuery = groq`
+  *[_type == "podcast" && category == $category] { "slug": slug.current }
+`
+
 // ─────────────────────────────────────────────
 // PODCAST REVIEWS
 // ─────────────────────────────────────────────

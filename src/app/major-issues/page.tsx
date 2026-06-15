@@ -1,5 +1,5 @@
 import { buildMetadata } from "@/lib/seo/metadata";
-import { getPodcastEpisodes } from "@/lib/content";
+import { getPodcastEpisodesByCategory } from "@/lib/content";
 import { PodcastCard } from "@/components/editorial/PodcastCard";
 import { SectionShell, SectionHeader } from "@/components/layout/SectionShell";
 import { FadeIn } from "@/components/motion/FadeIn";
@@ -14,7 +14,7 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function MajorIssuesPage() {
-    const episodes = await getPodcastEpisodes();
+    const episodes = await getPodcastEpisodesByCategory('major-issues');
     const latestEpisode = episodes[0];
     const archiveEpisodes = episodes.slice(1);
 

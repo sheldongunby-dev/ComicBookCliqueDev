@@ -1,83 +1,131 @@
 import { buildMetadata } from "@/lib/seo/metadata";
-import { getPodcastEpisodes } from "@/lib/content";
+import { getLatestEpisodeByCategory, getPodcastEpisodesByCategory } from "@/lib/content";
 import { PodcastCard } from "@/components/editorial/PodcastCard";
 import { SectionShell, SectionHeader } from "@/components/layout/SectionShell";
 import { FadeIn } from "@/components/motion/FadeIn";
-import { Mic, ExternalLink } from "lucide-react";
+import { Mic, Radio, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = buildMetadata({
-    title: "Major Issues Podcast",
-    description: "The #1 podcast covering the latest and greatest things to come to comic books and comic book media. We cover comics, movies, TV and more!",
+    title: "Podcasts — Comic Book Clique",
+    description: "All podcasts from the Comic Book Clique network. Major Issues covers comics, movies, and TV. Dirt Sheet Radio delivers unfiltered wrestling commentary.",
     path: "/podcast",
 });
 
-export default async function PodcastPage() {
-    const episodes = await getPodcastEpisodes();
-    const latestEpisode = episodes[0];
+export default async function PodcastHubPage() {
+    const [miEpisodes, dsrEpisodes] = await Promise.all([
+        getPodcastEpisodesByCategory('major-issues'),
+        getPodcastEpisodesByCategory('dirt-sheet-radio'),
+    ]);
+
+    const latestMI = miEpisodes[0];
+    const latestDSR = dsrEpisodes[0];
+
+    // Combine and sort all recent episodes for the mixed feed
+    const allRecent = [...miEpisodes.slice(0, 8), ...dsrEpisodes.slice(0, 8)]
+        .sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
+        .slice(0, 12);
 
     return (
         <>
-            {/* Section hero */}
+            {/* Hub Hero */}
             <div className="relative bg-cbc-darker border-b border-cbc-border pt-32 pb-16">
-                <div className="absolute inset-0 bg-gradient-to-br from-cbc-purple/10 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-br from-cbc-purple/10 via-transparent to-dsr-orange/5" />
                 <div className="absolute top-0 right-0 w-96 h-96 bg-cbc-purple/5 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-72 h-72 bg-dsr-orange/5 rounded-full blur-3xl" />
                 <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-6">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-px bg-cbc-purple" />
-                                <span className="font-label text-xs font-semibold tracking-[0.25em] uppercase text-cbc-purple">
-                                    Major Issues Podcast
-                                </span>
-                            </div>
-                            <h1 className="font-display text-display-xl text-cbc-white leading-none uppercase mb-4">
-                                The Major<br />Issues Podcast
-                            </h1>
-                            <p className="text-cbc-muted leading-relaxed mb-6 text-lg">
-                                The #1 podcast covering the latest and greatest in comic books and comic book media. Comics, movies, TV, and more — with passionate opinions every week.
-                            </p>
-                            <div className="flex flex-wrap gap-3">
-                                <a
-                                    href="https://open.spotify.com/show/6JieQia6J6lQ8vU4Mj3djK"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2 px-5 py-2.5 bg-cbc-purple hover:bg-cbc-purple/80 text-white font-heading font-semibold rounded-cbc transition-all duration-300 tracking-wide text-sm"
-                                >
-                                    <Mic size={16} /> Listen on Spotify
-                                </a>
-                                <a
-                                    href="http://www.youtube.com/comicbookclique"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2 px-5 py-2.5 border border-cbc-border hover:border-cbc-crimson/40 text-cbc-muted hover:text-cbc-white font-heading font-semibold rounded-cbc transition-all duration-300 tracking-wide text-sm"
-                                >
-                                    <ExternalLink size={14} /> YouTube
-                                </a>
-                            </div>
-                        </div>
-
-                        {/* Latest episode card */}
-                        {latestEpisode && (
-                            <div>
-                                <PodcastCard episode={latestEpisode} variant="featured" />
-                            </div>
-                        )}
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-px bg-cbc-purple" />
+                        <span className="font-label text-xs font-semibold tracking-[0.25em] uppercase text-cbc-purple">
+                            CBC Podcast Network
+                        </span>
                     </div>
+                    <h1 className="font-display text-display-xl text-cbc-white leading-none uppercase mb-4">
+                        Podcasts
+                    </h1>
+                    <p className="text-cbc-muted leading-relaxed mb-6 text-lg max-w-2xl">
+                        Two shows. Two lanes. Major Issues covers comics, movies, and TV. Dirt Sheet Radio covers wrestling. Both unfiltered.
+                    </p>
                 </div>
             </div>
 
-            {/* Episode archive */}
+            {/* Show Cards — AIPT-style show selector */}
             <SectionShell background="dark">
+                <div className="grid md:grid-cols-2 gap-6 mb-16">
+                    {/* Major Issues Card */}
+                    <Link 
+                        href="/major-issues"
+                        className="group relative overflow-hidden rounded-2xl border border-white/5 hover:border-cbc-purple/30 bg-cbc-surface transition-all duration-300"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-br from-cbc-purple/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="relative p-8">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-12 h-12 rounded-full bg-cbc-purple/10 border border-cbc-purple/20 flex items-center justify-center">
+                                    <Mic size={22} className="text-cbc-purple" />
+                                </div>
+                                <div>
+                                    <h2 className="font-display text-2xl text-white uppercase tracking-wide">Major Issues</h2>
+                                    <p className="text-cbc-muted text-sm">Comics • Movies • TV</p>
+                                </div>
+                            </div>
+                            <p className="text-cbc-muted text-sm leading-relaxed mb-4">
+                                The #1 podcast covering comic books and comic book media. 418+ episodes and counting.
+                            </p>
+                            {latestMI && (
+                                <div className="flex items-center gap-2 text-xs text-cbc-faint font-mono">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-cbc-purple" />
+                                    Latest: {latestMI.title.length > 50 ? latestMI.title.slice(0, 50) + '...' : latestMI.title}
+                                </div>
+                            )}
+                            <div className="mt-6 flex items-center gap-2 text-cbc-purple font-label text-xs uppercase tracking-wider font-bold group-hover:gap-3 transition-all">
+                                Browse Episodes <ArrowRight size={14} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    {/* Dirt Sheet Radio Card */}
+                    <Link 
+                        href="/dirtsheetradio"
+                        className="group relative overflow-hidden rounded-2xl border border-white/5 hover:border-dsr-orange/30 bg-cbc-surface transition-all duration-300"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-br from-dsr-orange/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="relative p-8">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-12 h-12 rounded-full bg-dsr-orange/10 border border-dsr-orange/20 flex items-center justify-center">
+                                    <Radio size={22} className="text-dsr-orange" />
+                                </div>
+                                <div>
+                                    <h2 className="font-display text-2xl text-white uppercase tracking-wide">Dirt Sheet Radio</h2>
+                                    <p className="text-cbc-muted text-sm">Wrestling • Live • Unfiltered</p>
+                                </div>
+                            </div>
+                            <p className="text-cbc-muted text-sm leading-relaxed mb-4">
+                                Wrestling{"'"}s most unfiltered commentary. Live reactions, hot takes, and breaking reports.
+                            </p>
+                            {latestDSR && (
+                                <div className="flex items-center gap-2 text-xs text-cbc-faint font-mono">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-dsr-orange" />
+                                    Latest: {latestDSR.title.length > 50 ? latestDSR.title.slice(0, 50) + '...' : latestDSR.title}
+                                </div>
+                            )}
+                            <div className="mt-6 flex items-center gap-2 text-dsr-orange font-label text-xs uppercase tracking-wider font-bold group-hover:gap-3 transition-all">
+                                Browse Episodes <ArrowRight size={14} />
+                            </div>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Combined Recent Feed */}
                 <SectionHeader
-                    label="Episode Archive"
-                    title="All Episodes"
-                    description="418+ episodes and counting. Every major comic book moment, covered."
+                    label="All Shows"
+                    title="Recent Episodes"
+                    description="Latest drops across the CBC podcast network."
                     titleAccent="purple"
                 />
                 <FadeIn>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {episodes.map((ep) => (
+                        {allRecent.map((ep) => (
                             <PodcastCard key={ep.id} episode={ep} variant="default" />
                         ))}
                     </div>
