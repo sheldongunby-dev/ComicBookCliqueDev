@@ -166,7 +166,8 @@ export function R2ImageUpload(props: ObjectInputProps<R2ImageValue>) {
       {/* Render the alt text field normally using Sanity's renderField */}
         {altFieldMember && renderField && altFieldMember.kind === 'field' && (
           <Box marginTop={3}>
-            {renderField(altFieldMember)}
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {renderField(altFieldMember.field as any)}
           </Box>
         )}
     </Stack>
