@@ -61,7 +61,14 @@ export default async function DsrEpisodePage({ params }: Props) {
                 {/* Title Overlay */}
                 <div className="absolute bottom-0 left-0 w-full p-6 sm:p-12 lg:p-20 z-10 flex flex-col justify-end">
                     <div className="max-w-4xl mx-auto w-full">
-                        <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-4 mb-6">
+                            <Image 
+                                src="/images/brand/cbc-dsr-banner.png" 
+                                alt="Dirt Sheet Radio" 
+                                width={160} 
+                                height={80} 
+                                className="h-8 w-auto drop-shadow-[0_0_10px_rgba(255,107,0,0.35)]" 
+                            />
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-dsr-orange/20 border border-dsr-orange/30 text-dsr-orange text-xs font-label font-bold tracking-widest uppercase rounded-sm backdrop-blur-sm">
                                 <Radio size={12} className="fill-current" />
                                 {episode.episodeNumber ? `Episode ${episode.episodeNumber}` : 'DSR'}

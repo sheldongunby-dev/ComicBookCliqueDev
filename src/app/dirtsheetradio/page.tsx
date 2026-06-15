@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Radio, Mic2, Headphones, ExternalLink, Play, Zap, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import { formatDateShort } from "@/lib/utils/helpers";
+import Image from "next/image";
 
 
 export const metadata: Metadata = buildMetadata({
@@ -65,13 +66,17 @@ export default async function DirtSheetRadioPage() {
                             </div>
 
                             {/* Show title */}
-                            <h1 className="font-display text-[clamp(3.5rem,10vw,8rem)] leading-none text-white uppercase mb-6 tracking-tight">
-                                Dirt
-                                <br />
-                                <span className="text-dsr-orange [text-shadow:0_0_40px_rgba(255,107,0,0.35)]">Sheet</span>
-                                <br />
-                                Radio
-                            </h1>
+                            <div className="mb-6 max-w-[500px]">
+                                <Image 
+                                    src="/images/brand/cbc-dsr-banner.png" 
+                                    alt="Dirt Sheet Radio" 
+                                    width={1000} 
+                                    height={500} 
+                                    className="w-full h-auto drop-shadow-[0_0_40px_rgba(255,107,0,0.35)]"
+                                    priority
+                                />
+                                <h1 className="sr-only">Dirt Sheet Radio</h1>
+                            </div>
 
                             <p className="text-cbc-muted text-lg sm:text-xl leading-relaxed mb-8 max-w-xl font-body">
                                 Wrestling{"'"}s most unfiltered commentary. Join Jon Escudero and Nick LaRocco as they deliver the real story behind pro wrestling, live call-ins, and breaking WWE/AEW/TNA reports.

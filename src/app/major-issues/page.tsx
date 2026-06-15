@@ -6,6 +6,7 @@ import { FadeIn } from "@/components/motion/FadeIn";
 import { Mic, ArrowRight, Radio, Star, Landmark, Layers } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = buildMetadata({
     title: "Major Issues Podcast — Comic Book Clique",
@@ -41,11 +42,17 @@ export default async function MajorIssuesPage() {
                                 <span className="w-1.5 h-1.5 rounded-full bg-cbc-purple animate-pulse" />
                                 <span className="text-cbc-faint text-xs font-mono tracking-widest uppercase">Weekly Show</span>
                             </div>
-                            <h1 className="font-display text-[clamp(3.5rem,10vw,8rem)] leading-none text-white uppercase mb-6 tracking-tight">
-                                Major
-                                <br />
-                                <span className="text-cbc-purple [text-shadow:0_0_40px_rgba(168,85,247,0.3)]">Issues</span>
-                            </h1>
+                            <div className="mb-6 max-w-[400px]">
+                                <Image 
+                                    src="/images/brand/major-issues-logo.png" 
+                                    alt="Major Issues Podcast" 
+                                    width={800} 
+                                    height={400} 
+                                    className="w-full h-auto drop-shadow-[0_0_40px_rgba(168,85,247,0.3)]"
+                                    priority
+                                />
+                                <h1 className="sr-only">Major Issues</h1>
+                            </div>
                             <p className="text-cbc-muted text-lg sm:text-xl leading-relaxed mb-8">
                                 Comic Book Clique{"'"}s flagship show. Join the crew every week as they dissect the biggest stories in comic books, review the latest Marvel/DC drops, and track the expansion of comic book media.
                             </p>

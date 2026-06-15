@@ -5,6 +5,7 @@ import { SectionShell, SectionHeader } from "@/components/layout/SectionShell";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Mic, Radio, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = buildMetadata({
@@ -65,7 +66,13 @@ export default async function PodcastHubPage() {
                                     <Mic size={22} className="text-cbc-purple" />
                                 </div>
                                 <div>
-                                    <h2 className="font-display text-2xl text-white uppercase tracking-wide">Major Issues</h2>
+                                    <Image 
+                                        src="/images/brand/major-issues-logo.png" 
+                                        alt="Major Issues" 
+                                        width={200} 
+                                        height={100} 
+                                        className="h-8 w-auto mb-1 drop-shadow-[0_0_10px_rgba(168,85,247,0.3)]" 
+                                    />
                                     <p className="text-cbc-muted text-sm">Comics • Movies • TV</p>
                                 </div>
                             </div>
@@ -96,7 +103,13 @@ export default async function PodcastHubPage() {
                                     <Radio size={22} className="text-dsr-orange" />
                                 </div>
                                 <div>
-                                    <h2 className="font-display text-2xl text-white uppercase tracking-wide">Dirt Sheet Radio</h2>
+                                    <Image 
+                                        src="/images/brand/cbc-dsr-banner.png" 
+                                        alt="Dirt Sheet Radio" 
+                                        width={200} 
+                                        height={100} 
+                                        className="h-8 w-auto mb-1 drop-shadow-[0_0_10px_rgba(255,107,0,0.35)]" 
+                                    />
                                     <p className="text-cbc-muted text-sm">Wrestling • Live • Unfiltered</p>
                                 </div>
                             </div>
