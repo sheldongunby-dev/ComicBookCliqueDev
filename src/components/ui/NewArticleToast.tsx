@@ -82,7 +82,7 @@ export function NewArticleToast({ article }: NewArticleToastProps) {
                   {article.title}
                 </h4>
                 <Link 
-                  href={`/articles/${article.slug}`}
+                  href={`/features/${article.slug}`}
                   onClick={() => sessionStorage.setItem(`dismissed-toast-${article.slug}`, 'true')}
                   className="text-xs text-cbc-muted hover:text-cbc-gold font-body underline mt-2 w-fit transition-colors"
                 >

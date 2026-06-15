@@ -25,7 +25,8 @@ function getCardMetadata(article: any) {
             colorClass: "bg-cbc-crimson",
             colorTextClass: "text-cbc-crimson",
             bulletColorClass: "bg-cbc-crimson",
-            icon: MessageSquare
+            icon: MessageSquare,
+            basePath: "/features"
         };
     } else if (isReview) {
         return {
@@ -34,7 +35,8 @@ function getCardMetadata(article: any) {
             colorClass: "bg-cbc-crimson",
             colorTextClass: "text-cbc-crimson",
             bulletColorClass: "bg-cbc-crimson",
-            icon: Star
+            icon: Star,
+            basePath: "/reviews"
         };
     } else if (isPodcast) {
         return {
@@ -43,7 +45,8 @@ function getCardMetadata(article: any) {
             colorClass: "bg-cbc-purple",
             colorTextClass: "text-cbc-purple",
             bulletColorClass: "bg-cbc-purple",
-            icon: Mic
+            icon: Mic,
+            basePath: "/podcast"
         };
     } else if (isNews) {
         return {
@@ -52,7 +55,8 @@ function getCardMetadata(article: any) {
             colorClass: "bg-cbc-gold text-cbc-black",
             colorTextClass: "text-cbc-gold",
             bulletColorClass: "bg-cbc-gold",
-            icon: Newspaper
+            icon: Newspaper,
+            basePath: "/news"
         };
     } else {
         return {
@@ -61,7 +65,8 @@ function getCardMetadata(article: any) {
             colorClass: "bg-cbc-crimson",
             colorTextClass: "text-cbc-crimson",
             bulletColorClass: "bg-cbc-crimson",
-            icon: FileText
+            icon: FileText,
+            basePath: "/features"
         };
     }
 }
@@ -72,7 +77,7 @@ export function InterviewCard({ article, variant = "split" }: { article: Article
 
     if (variant === "hero") {
         return (
-            <Link href={`/features/${article.slug}`} className="group relative block w-full overflow-hidden rounded-xl bg-cbc-charcoal">
+            <Link href={`${meta.basePath}/${article.slug}`} className="group relative block w-full overflow-hidden rounded-xl bg-cbc-charcoal">
                 <div className="absolute inset-0 bg-gradient-to-t from-cbc-black/90 via-cbc-black/40 to-transparent z-10" />
                 {article.heroImage && (
                     <>
@@ -147,7 +152,7 @@ export function InterviewCard({ article, variant = "split" }: { article: Article
                     )}
                 </div>
                 
-                <Link href={`/features/${article.slug}`} className="group block space-y-4">
+                <Link href={`${meta.basePath}/${article.slug}`} className="group block space-y-4">
                     <h3 className="text-2xl sm:text-3xl lg:text-4xl font-display text-cbc-white leading-[1.05] group-hover:text-cbc-crimson transition-colors duration-300">
                         {article.title.replace(/^EXCLUSIVE:\s*/i, '')}
                     </h3>
@@ -165,7 +170,7 @@ export function InterviewCard({ article, variant = "split" }: { article: Article
             </div>
             
             {article.heroImage && (
-                <Link href={`/features/${article.slug}`} className="relative w-full md:w-1/3 aspect-[4/5] md:aspect-square overflow-hidden rounded-md flex-shrink-0 group">
+                <Link href={`${meta.basePath}/${article.slug}`} className="relative w-full md:w-1/3 aspect-[4/5] md:aspect-square overflow-hidden rounded-md flex-shrink-0 group">
                     <Image
                         src={article.heroImage.url}
                         alt={article.heroImage.alt || article.title}

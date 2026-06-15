@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from 'next-sanity';
 import { apiVersion, dataset, projectId } from '@/sanity/env';
+import Parser from 'rss-parser';
 
 // Create a Sanity client that has write access
 const writeClient = createClient({
@@ -79,16 +80,8 @@ export async function GET(request: Request) {
       const plainExcerpt = ep.content ? ep.content.replace(/<[^>]+>/g, '').slice(0, 200) + '...' : '';
 
       // Determine category from title
-      let showCategory = 'major-issues'; // Default fallback
-      const lowerTitle = ep.title.toLowerCase();
-      
-      if (lowerTitle.includes('dirt sheet')) {
-        showCategory = 'dirt-sheet-radio';
-      } else if (lowerTitle.includes('gaming')) {
-        showCategory = 'gaming';
-      } else if (lowerTitle.includes('pop culture')) {
-        showCategory = 'pop-culture';
-      }
+      // Podbean is exclusively for Major Issues Podcast.
+      let showCategory = 'major-issues';
 
       // Prepare Sanity Document
       // We use the Podbean ID as part of the sanity document ID to easily upsert
@@ -118,13 +111,51 @@ export async function GET(request: Request) {
       syncedCount++;
     }
 
+    // 4. Fetch Dirt Sheet Radio from Libsyn
+    const parser = new Parser();
+    let dsrSyncedCount = 0;
+    try {
+      const dsrFeed = await parser.parseURL('https://feeds.libsyn.com/302210/spotify');
+      for (const ep of dsrFeed.items) {
+        if (!ep.title) continue;
+
+        const safeSlug = ep.title
+          .replace(/[\/\\:\*\?"<>\|]/g, '-')
+          .replace(/\s+/g, '-')
+          .toLowerCase();
+
+        const epMatch = ep.title.match(/Ep(?:\.|isode)?\s*(\d+)/i);
+        const epNum = epMatch ? parseInt(epMatch[1]) : undefined;
+
+        const pubDate = ep.pubDate ? new Date(ep.pubDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+        const plainExcerpt = ep.contentSnippet ? ep.contentSnippet.slice(0, 200) + '...' : '';
+
+        const docId = `podcast-libsyn-${ep.guid || safeSlug}`;
+
+        transaction.createIfNotExists({
+          _id: docId,
+          _type: 'podcast',
+          title: ep.title,
+          slug: { _type: 'slug', current: safeSlug },
+          category: 'dirt-sheet-radio',
+          publishDate: pubDate,
+          episodeNumber: epNum,
+          audioUrl: ep.enclosure?.url || '',
+          excerpt: plainExcerpt,
+          featured: false,
+        });
+        dsrSyncedCount++;
+      }
+    } catch (e) {
+      console.error('Failed to sync Libsyn feed:', e);
+    }
+
     await transaction.commit();
 
-    return NextResponse.json({
-      success: true,
-      message: `Successfully synced ${syncedCount} episodes.`,
+    return NextResponse.json({ 
+      success: true, 
+      message: `Synced ${syncedCount} Major Issues episodes and ${dsrSyncedCount} DSR episodes.`
     });
-
   } catch (error: any) {
     console.error('Sync error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

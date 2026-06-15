@@ -42,6 +42,13 @@ export function truncate(str: string, maxLength: number): string {
     return str.slice(0, maxLength).replace(/\s+\S*$/, "") + "…";
 }
 
+export function cleanLegacyExcerpt(text: string): string {
+    if (!text) return text;
+    let cleaned = text.replace(/\\?\[\/?caption[^\]]*\\?\]/gi, '');
+    cleaned = cleaned.replace(/!\[([^\]]*)\]\([^)]+\)/g, '');
+    return cleaned.trim();
+}
+
 export function getAccentClass(color: "crimson" | "gold" | "cyan" | "purple"): string {
     const map = {
         crimson: "text-cbc-crimson",

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { buildMetadata, articleJsonLd } from "@/lib/seo/metadata";
 import { getReviewBySlug, getReviews } from "@/lib/content";
-import { formatDate } from "@/lib/utils/helpers";
+import { formatDate, cleanLegacyExcerpt } from "@/lib/utils/helpers";
 import { SectionShell } from "@/components/layout/SectionShell";
 import { ReviewCard } from "@/components/editorial/ReviewCard";
 import { PortableTextContent } from "@/components/editorial/PortableTextContent";
@@ -139,7 +139,7 @@ export default async function ReviewDetailPage({ params }: Props) {
                                 {/* Lead excerpt */}
                                 {review.excerpt && (
                                     <p className="text-2xl text-cbc-white/90 font-heading leading-tight mb-12 border-l-4 border-cbc-crimson pl-8 italic">
-                                        {review.excerpt}
+                                        {cleanLegacyExcerpt(review.excerpt)}
                                     </p>
                                 )}
 

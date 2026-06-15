@@ -124,6 +124,40 @@ export const richTextBody = {
         prepare: (val: any) => ({ title: `📦 Info Box: ${val.title || val.type}` }),
       },
     },
+    // Z-Pattern Layout Spread
+    {
+      type: 'object',
+      name: 'zPattern',
+      title: 'Z-Pattern Layout',
+      fields: [
+        {
+          name: 'topText',
+          type: 'array',
+          title: 'Top Left Text (Hook)',
+          of: [{ type: 'block' }],
+        },
+        {
+          name: 'topImage',
+          type: 'r2-image',
+          title: 'Top Right Image',
+        },
+        {
+          name: 'bottomImage',
+          type: 'r2-image',
+          title: 'Bottom Left Image',
+        },
+        {
+          name: 'bottomText',
+          type: 'array',
+          title: 'Bottom Right Text',
+          of: [{ type: 'block' }],
+        },
+      ],
+      preview: {
+        select: { title: 'topText.0.children.0.text' },
+        prepare: (val: any) => ({ title: `🔄 Z-Pattern: ${val.title || 'Empty'}` }),
+      },
+    },
     // Image Gallery
     {
       type: 'object',

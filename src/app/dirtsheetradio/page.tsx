@@ -38,17 +38,18 @@ export default async function DirtSheetRadioPage() {
         .sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
 
     const latestEpisode = dsrEpisodes[0];
-    const recentEpisodes = dsrEpisodes.slice(1, 7);
+    const recentEpisodes = dsrEpisodes.slice(0, 6);
     const recentWrestlingNews = wrestlingNews.slice(0, 6);
 
     return (
         <div className="min-h-screen bg-[#07060A] text-cbc-white pb-24">
             {/* ── BROADCAST HERO ── */}
             <div className="relative pt-32 pb-16 overflow-hidden bg-gradient-to-b from-[#1E0C02] via-[#0D0803] to-[#07060A] border-b border-white/5">
-                {/* Visual Glows */}
+                {/* Visual Glows & Custom Background */}
                 <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-dsr-orange/10 rounded-full blur-[120px]" />
-                    <div className="absolute left-10 bottom-0 w-[300px] h-[300px] bg-cbc-crimson/5 rounded-full blur-[100px]" />
+                    <Image src="/images/brand/dsr-bg.png" alt="" fill priority className="object-cover opacity-30 mix-blend-screen" />
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-dsr-orange/15 rounded-full blur-[120px]" />
+                    <div className="absolute left-10 bottom-0 w-[300px] h-[300px] bg-cbc-crimson/10 rounded-full blur-[100px]" />
                 </div>
                 
                 {/* Noise overlay */}

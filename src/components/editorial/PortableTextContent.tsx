@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { PortableText } from '@portabletext/react'
 import { PortableTextComponents } from '@portabletext/react'
 import Image from 'next/image'
@@ -14,6 +15,77 @@ interface PortableTextContentProps {
 }
 
 /**
+ * Helper to process legacy markdown left over from the migration script.
+ * Parses raw text nodes for image tags `![](url)`, HRs `* * *`, and italics `_text_`.
+ */
+function parseLegacyMarkdown(children: React.ReactNode): React.ReactNode {
+  if (!children) return children;
+  
+  const childrenArray = React.Children.toArray(children);
+  
+  return childrenArray.map((child, index) => {
+    if (typeof child !== 'string') return child;
+
+    // Remove legacy WordPress caption shortcodes
+    let text = child.replace(/\\?\[\/?caption[^\]]*\\?\]/gi, '').trim();
+
+    // Standalone image markdown: ![](url)
+    const imgMatch = text.match(/!\[([^\]]*)\]\(([^)]+)\)/);
+    if (imgMatch) {
+      const captionText = text.replace(imgMatch[0], '').trim();
+      return (
+        <figure key={index} className="my-12 block">
+          <div className="relative block w-full aspect-[4/3] sm:aspect-[16/9] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <img
+              src={imgMatch[2]}
+              alt={imgMatch[1] || 'Article Image'}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+          {captionText && (
+            <figcaption className="text-center text-sm text-cbc-muted mt-3 font-body italic">
+              {captionText}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
+    
+    // Horizontal rule
+    if (text === '* * *' || text === '***' || text === '---') {
+      return <hr key={index} className="my-12 border-white/10" />;
+    }
+
+    // Bold **text**
+    let parts: React.ReactNode[] = [text];
+    parts = parts.flatMap(part => {
+      if (typeof part !== 'string') return part;
+      const chunks = part.split(/(\*\*.*?\*\*)/g);
+      return chunks.map((chunk, i) => {
+        if (chunk.startsWith('**') && chunk.endsWith('**')) {
+          return <strong key={`b-${i}`} className="text-cbc-white font-extrabold">{chunk.slice(2, -2)}</strong>;
+        }
+        return chunk;
+      });
+    });
+
+    // Italic _text_
+    parts = parts.flatMap(part => {
+      if (typeof part !== 'string') return part;
+      const chunks = part.split(/(_[^_]+_)/g);
+      return chunks.map((chunk, i) => {
+        if (chunk.startsWith('_') && chunk.endsWith('_')) {
+          return <em key={`i-${i}`} className="italic">{chunk.slice(1, -1)}</em>;
+        }
+        return chunk;
+      });
+    });
+
+    return <React.Fragment key={index}>{parts}</React.Fragment>;
+  });
+}
+
+/**
  * Renders Sanity Portable Text with the site's editorial styling.
  * Supports: headings, bold, italic, code, links, images, blockquotes,
  * video embeds, and pull quotes.
@@ -21,22 +93,22 @@ interface PortableTextContentProps {
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
-      <p className="font-body text-cbc-white/80 leading-[1.8] mb-8 text-lg">{children}</p>
+      <p className="font-body text-cbc-white/80 leading-[1.8] mb-8 text-lg">{parseLegacyMarkdown(children)}</p>
     ),
     h2: ({ children }) => (
       <h2 className="text-4xl mt-16 mb-8 font-heading font-bold text-cbc-white tracking-tight border-l-4 border-cbc-crimson pl-6">
-        {children}
+        {parseLegacyMarkdown(children)}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-2xl mt-10 mb-6 font-heading font-bold text-cbc-gold">{children}</h3>
+      <h3 className="text-2xl mt-10 mb-6 font-heading font-bold text-cbc-gold">{parseLegacyMarkdown(children)}</h3>
     ),
     h4: ({ children }) => (
-      <h4 className="text-xl mt-8 mb-4 font-heading text-cbc-white/90">{children}</h4>
+      <h4 className="text-xl mt-8 mb-4 font-heading text-cbc-white/90">{parseLegacyMarkdown(children)}</h4>
     ),
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-cbc-crimson pl-8 py-4 bg-cbc-crimson/5 backdrop-blur-sm rounded-r-xl italic text-cbc-white font-heading text-2xl my-12 shadow-cbc">
-        {children}
+        {parseLegacyMarkdown(children)}
       </blockquote>
     ),
   },
@@ -86,9 +158,9 @@ const components: PortableTextComponents = {
   types: {
     // Inline image with caption
     image: ({ value }) => {
-      if (!value?.asset?.url && !value?.asset?._ref) return null
+      if (!value?.url && !value?.asset?.url && !value?.asset?._ref) return null
       // Build URL from reference if needed
-      const url = value.asset?.url ?? `/api/sanity-image?ref=${value.asset._ref}`
+      const url = value.url ?? value.asset?.url ?? `/api/sanity-image?ref=${value.asset?._ref}`
       return (
         <figure className="my-12">
           <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
@@ -208,6 +280,43 @@ const components: PortableTextComponents = {
       )
     },
 
+    // Z-Pattern Layout
+    zPattern: ({ value }) => {
+      if (!value) return null
+      
+      const getUrl = (img: any) => img?.url ?? img?.asset?.url ?? (img?.asset?._ref ? `/api/sanity-image?ref=${img.asset._ref}` : null)
+      const topImgUrl = getUrl(value.topImage)
+      const bottomImgUrl = getUrl(value.bottomImage)
+
+      return (
+        <div className="my-20 flex flex-col gap-8 md:gap-16">
+          {/* Top Row: Text Left, Image Right */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div className="prose prose-invert prose-p:text-cbc-white/80 prose-headings:text-cbc-white prose-a:text-cbc-crimson max-w-none order-2 md:order-1">
+              {value.topText && <PortableText value={value.topText} components={components} />}
+            </div>
+            {topImgUrl && (
+              <div className="relative aspect-video md:aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.5)] border border-white/10 order-1 md:order-2 group">
+                <Image src={topImgUrl} alt={value.topImage?.alt || "Top right visual"} fill className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              </div>
+            )}
+          </div>
+
+          {/* Bottom Row: Image Left, Text Right */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+            {bottomImgUrl && (
+              <div className="relative aspect-video md:aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.5)] border border-white/10 order-1 group">
+                <Image src={bottomImgUrl} alt={value.bottomImage?.alt || "Bottom left visual"} fill className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              </div>
+            )}
+            <div className="prose prose-invert prose-p:text-cbc-white/80 prose-headings:text-cbc-white prose-a:text-cbc-crimson max-w-none order-2">
+              {value.bottomText && <PortableText value={value.bottomText} components={components} />}
+            </div>
+          </div>
+        </div>
+      )
+    },
+
     // Image Gallery
     imageGallery: ({ value }) => {
       if (!value?.images?.length) return null
@@ -219,7 +328,7 @@ const components: PortableTextComponents = {
       return (
         <div className={cn("my-16 grid gap-4", layoutClass)}>
           {value.images.map((img: any, i: number) => {
-            const url = img.asset?.url ?? (img.asset?._ref ? `/api/sanity-image?ref=${img.asset._ref}` : null)
+            const url = img.url ?? img.asset?.url ?? (img.asset?._ref ? `/api/sanity-image?ref=${img.asset._ref}` : null)
             if (!url) return null
             return (
               <div key={i} className="relative aspect-[4/3] w-full rounded-xl overflow-hidden shadow-lg border border-white/5">

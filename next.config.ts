@@ -36,6 +36,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*.r2.dev", // Cloudflare R2 default domains
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
       // Note: If you configure a custom domain for R2 (e.g. media.comicbookclique.com),
       // you must add it here!
     ],

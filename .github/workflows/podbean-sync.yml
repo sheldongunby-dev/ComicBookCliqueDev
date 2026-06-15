@@ -1,0 +1,17 @@
+name: Sync Podbean Episodes to Sanity
+
+on:
+  schedule:
+    # Runs every hour at the 30-minute mark
+    - cron: '30 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Podbean API Sync
+        run: |
+          # Fetch the sync endpoint. It uses the SYNC_SECRET to prevent unauthorized execution.
+          # The route will fetch the latest 50 episodes and push them to Sanity via the SANITY_API_WRITE_TOKEN.
+          curl -f -s -S "https://comicbookclique.com/api/sync/podbean?secret=${{ secrets.SYNC_SECRET }}" || (echo "Sync failed!" && exit 1)

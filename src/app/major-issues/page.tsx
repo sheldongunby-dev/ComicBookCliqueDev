@@ -1,6 +1,7 @@
 import { buildMetadata } from "@/lib/seo/metadata";
 import { getPodcastEpisodesByCategory } from "@/lib/content";
 import { PodcastCard } from "@/components/editorial/PodcastCard";
+import { MajorIssuesHeroCard } from "@/components/editorial/MajorIssuesHeroCard";
 import { SectionShell, SectionHeader } from "@/components/layout/SectionShell";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Mic, ArrowRight, Radio, Star, Landmark, Layers } from "lucide-react";
@@ -23,10 +24,11 @@ export default async function MajorIssuesPage() {
         <div className="min-h-screen bg-cbc-black pb-24">
             {/* Cinematic Hero */}
             <div className="relative pt-32 pb-20 border-b border-cbc-border overflow-hidden bg-gradient-to-b from-[#110A1A] via-cbc-black to-cbc-black">
-                {/* Visual Glows */}
+                {/* Visual Glows & Custom Background */}
                 <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cbc-purple/10 rounded-full blur-[120px]" />
-                    <div className="absolute left-1/4 bottom-0 w-[300px] h-[300px] bg-cbc-cyan/5 rounded-full blur-[100px]" />
+                    <Image src="/images/brand/major-issues-bg.png" alt="" fill priority className="object-cover opacity-30 mix-blend-screen" />
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cbc-purple/15 rounded-full blur-[120px]" />
+                    <div className="absolute left-1/4 bottom-0 w-[300px] h-[300px] bg-cbc-cyan/10 rounded-full blur-[100px]" />
                 </div>
                 
                 {/* Halftone texture overlay */}
@@ -57,42 +59,13 @@ export default async function MajorIssuesPage() {
                                 Comic Book Clique{"'"}s flagship show. Join the crew every week as they dissect the biggest stories in comic books, review the latest Marvel/DC drops, and track the expansion of comic book media.
                             </p>
                             
-                            <div className="flex flex-wrap gap-4">
-                                <a
-                                    href="https://open.spotify.com/show/6JieQia6J6lQ8vU4Mj3djK"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-6 py-3 bg-cbc-purple hover:bg-cbc-purple/90 text-white font-heading font-semibold rounded-cbc transition-all duration-300 tracking-wide text-sm flex items-center gap-2 shadow-lg"
-                                >
-                                    Listen on Spotify
-                                </a>
-                                <a
-                                    href="https://podcasts.apple.com/us/podcast/major-issues-podcast/id1321720972"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-6 py-3 border border-cbc-border hover:border-cbc-purple/40 text-cbc-muted hover:text-cbc-white font-heading font-semibold rounded-cbc transition-all duration-300 tracking-wide text-sm flex items-center gap-2"
-                                >
-                                    Apple Podcasts
-                                </a>
-                            </div>
+                            {/* Listen buttons (moved into card, but we can keep small social links if needed, or remove them since the card has CTAs) */}
                         </div>
 
-                        {/* Featured Episode Display */}
-                        {latestEpisode && (
-                            <div className="w-full">
-                                <div className="text-center sm:text-left mb-3">
-                                    <span className="tag-chip bg-cbc-purple/20 text-cbc-purple border border-cbc-purple/30">
-                                        Latest Broadcast
-                                    </span>
-                                </div>
-                                <div className="relative group rounded-2xl overflow-hidden border border-cbc-border bg-cbc-darker hover:border-cbc-purple/40 transition-all duration-300 shadow-2xl">
-                                    {/* Link wrapper for the featured episode */}
-                                    <Link href={`/major-issues/${latestEpisode.slug}`} className="block">
-                                        <PodcastCard episode={latestEpisode} variant="featured" />
-                                    </Link>
-                                </div>
-                            </div>
-                        )}
+                        {/* Featured Episode Display / Live Stream Card */}
+                        <div className="w-full">
+                            <MajorIssuesHeroCard />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,9 +83,7 @@ export default async function MajorIssuesPage() {
                     <FadeIn>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                             {archiveEpisodes.map((ep) => (
-                                <Link key={ep.id} href={`/major-issues/${ep.slug}`} className="block group">
-                                    <PodcastCard episode={ep} variant="default" />
-                                </Link>
+                                <PodcastCard key={ep.id} episode={ep} variant="default" />
                             ))}
                         </div>
                     </FadeIn>
