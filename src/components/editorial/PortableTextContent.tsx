@@ -3,6 +3,9 @@
 import { PortableText } from '@portabletext/react'
 import { PortableTextComponents } from '@portabletext/react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { Tweet } from 'react-tweet'
+import { Info, AlertTriangle, CheckCircle, Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/utils/helpers'
 
 interface PortableTextContentProps {
@@ -154,6 +157,150 @@ const components: PortableTextComponents = {
             </p>
           )}
         </aside>
+      )
+    },
+
+    // Info Box / Callout
+    infoBox: ({ value }) => {
+      if (!value) return null
+      
+      const typeConfig = {
+        verdict: {
+          bg: 'bg-emerald-500/10',
+          border: 'border-emerald-500/30',
+          text: 'text-emerald-400',
+          icon: <CheckCircle className="w-5 h-5 text-emerald-400" />
+        },
+        warning: {
+          bg: 'bg-cbc-crimson/10',
+          border: 'border-cbc-crimson/30',
+          text: 'text-cbc-crimson',
+          icon: <AlertTriangle className="w-5 h-5 text-cbc-crimson" />
+        },
+        takeaway: {
+          bg: 'bg-cbc-purple/10',
+          border: 'border-cbc-purple/30',
+          text: 'text-cbc-purple',
+          icon: <Lightbulb className="w-5 h-5 text-cbc-purple" />
+        },
+        info: {
+          bg: 'bg-[#00A3FF]/10',
+          border: 'border-[#00A3FF]/30',
+          text: 'text-[#00A3FF]',
+          icon: <Info className="w-5 h-5 text-[#00A3FF]" />
+        }
+      }
+
+      const config = typeConfig[value.type as keyof typeof typeConfig] || typeConfig.info
+
+      return (
+        <aside className={cn("my-12 p-6 md:p-8 rounded-2xl border backdrop-blur-sm", config.bg, config.border)}>
+          <div className="flex items-center gap-3 mb-4">
+            {config.icon}
+            <h4 className={cn("font-heading font-bold text-xl uppercase tracking-wider", config.text)}>
+              {value.title || value.type}
+            </h4>
+          </div>
+          <div className="prose prose-invert prose-p:text-cbc-white/80 max-w-none">
+            <PortableText value={value.content} components={components} />
+          </div>
+        </aside>
+      )
+    },
+
+    // Image Gallery
+    imageGallery: ({ value }) => {
+      if (!value?.images?.length) return null
+
+      const layoutClass = value.layout === '3-col' 
+        ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' 
+        : 'grid-cols-1 sm:grid-cols-2'
+
+      return (
+        <div className={cn("my-16 grid gap-4", layoutClass)}>
+          {value.images.map((img: any, i: number) => {
+            const url = img.asset?.url ?? (img.asset?._ref ? `/api/sanity-image?ref=${img.asset._ref}` : null)
+            if (!url) return null
+            return (
+              <div key={i} className="relative aspect-[4/3] w-full rounded-xl overflow-hidden shadow-lg border border-white/5">
+                <Image src={url} alt={img.alt || `Gallery image ${i + 1}`} fill className="object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            )
+          })}
+        </div>
+      )
+    },
+
+    // Divider
+    divider: ({ value }) => {
+      if (value.style === 'thematic') {
+        return (
+          <div className="flex items-center justify-center gap-4 my-16 opacity-50">
+            <div className="h-px bg-gradient-to-r from-transparent to-cbc-crimson/50 w-24"></div>
+            <div className="w-3 h-3 rotate-45 bg-cbc-crimson"></div>
+            <div className="h-px bg-gradient-to-l from-transparent to-cbc-crimson/50 w-24"></div>
+          </div>
+        )
+      }
+      if (value.style === 'bold') {
+        return <hr className="my-16 border-t-4 border-white/10 w-32 mx-auto rounded-full" />
+      }
+      return <hr className="my-12 border-t border-white/5 w-full" />
+    },
+
+    // Social Embed
+    socialEmbed: ({ value }) => {
+      if (!value?.url) return null
+      
+      if (value.platform === 'twitter') {
+        const id = value.url.split('status/')[1]?.split('?')[0]
+        if (!id) return null
+        return (
+          <div className="flex justify-center my-12 w-full max-w-lg mx-auto" data-theme="dark">
+            <Tweet id={id} />
+          </div>
+        )
+      }
+
+      if (value.platform === 'instagram') {
+        return (
+          <div className="flex justify-center my-12">
+            <iframe 
+              src={`${value.url}${value.url.endsWith('/') ? '' : '/'}embed`}
+              className="w-full max-w-lg aspect-[4/5] rounded-xl border border-white/10 shadow-xl"
+              allowFullScreen
+            />
+          </div>
+        )
+      }
+      return null
+    },
+
+    // Call To Action
+    callToAction: ({ value }) => {
+      if (!value?.url || !value?.buttonText) return null
+
+      const styleClasses = {
+        primary: 'bg-cbc-purple text-white border border-cbc-purple hover:bg-cbc-purple/80 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]',
+        secondary: 'bg-dsr-orange text-white border border-dsr-orange hover:bg-dsr-orange/80 hover:shadow-[0_0_20px_rgba(255,107,0,0.4)]',
+        outline: 'bg-transparent text-cbc-white border border-cbc-muted hover:border-cbc-white hover:bg-white/5',
+      }
+
+      const buttonClass = styleClasses[value.style as keyof typeof styleClasses] || styleClasses.primary
+
+      return (
+        <div className="my-12 flex justify-center">
+          <Link 
+            href={value.url} 
+            target={value.url.startsWith('http') ? '_blank' : undefined}
+            className={cn(
+              "px-8 py-4 rounded-full font-heading font-bold uppercase tracking-widest text-sm transition-all duration-300",
+              buttonClass
+            )}
+          >
+            {value.buttonText}
+          </Link>
+        </div>
       )
     },
   },

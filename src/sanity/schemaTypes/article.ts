@@ -90,6 +90,157 @@ export const richTextBody = {
         prepare: (val: any) => ({ title: `💬 ${val.title}` }),
       },
     },
+    // Info Box / Callout
+    {
+      type: 'object',
+      name: 'infoBox',
+      title: 'Info Box / Callout',
+      fields: [
+        { name: 'title', type: 'string', title: 'Box Title (optional)' },
+        {
+          name: 'type',
+          type: 'string',
+          title: 'Box Type',
+          options: {
+            list: [
+              { title: 'Verdict (Green)', value: 'verdict' },
+              { title: 'Takeaway (Purple)', value: 'takeaway' },
+              { title: 'Warning (Red)', value: 'warning' },
+              { title: 'Info (Blue)', value: 'info' },
+            ],
+            layout: 'dropdown',
+          },
+          initialValue: 'info',
+        },
+        {
+          name: 'content',
+          type: 'array',
+          title: 'Content',
+          of: [{ type: 'block' }],
+        },
+      ],
+      preview: {
+        select: { title: 'title', type: 'type' },
+        prepare: (val: any) => ({ title: `📦 Info Box: ${val.title || val.type}` }),
+      },
+    },
+    // Image Gallery
+    {
+      type: 'object',
+      name: 'imageGallery',
+      title: 'Image Gallery',
+      fields: [
+        {
+          name: 'images',
+          type: 'array',
+          title: 'Images',
+          of: [{ type: 'r2-image' }],
+          options: { layout: 'grid' },
+        },
+        {
+          name: 'layout',
+          type: 'string',
+          title: 'Gallery Layout',
+          options: {
+            list: [
+              { title: '2 Columns', value: '2-col' },
+              { title: '3 Columns', value: '3-col' },
+            ],
+            layout: 'radio',
+          },
+          initialValue: '2-col',
+        },
+      ],
+      preview: {
+        select: { images: 'images' },
+        prepare: (val: any) => ({ title: `🖼️ Gallery (${val.images?.length || 0} images)` }),
+      },
+    },
+    // Divider
+    {
+      type: 'object',
+      name: 'divider',
+      title: 'Thematic Divider',
+      fields: [
+        {
+          name: 'style',
+          type: 'string',
+          title: 'Divider Style',
+          options: {
+            list: [
+              { title: 'Subtle Line', value: 'subtle' },
+              { title: 'Bold Break', value: 'bold' },
+              { title: 'Thematic (Logo)', value: 'thematic' },
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'subtle',
+        },
+      ],
+      preview: {
+        select: { style: 'style' },
+        prepare: (val: any) => ({ title: `➖ Divider (${val.style})` }),
+      },
+    },
+    // Social Embed
+    {
+      type: 'object',
+      name: 'socialEmbed',
+      title: 'Social Media Embed',
+      fields: [
+        {
+          name: 'url',
+          type: 'url',
+          title: 'Post URL',
+          description: 'Paste the link to the Twitter/X or Instagram post',
+        },
+        {
+          name: 'platform',
+          type: 'string',
+          title: 'Platform',
+          options: {
+            list: [
+              { title: 'Twitter / X', value: 'twitter' },
+              { title: 'Instagram', value: 'instagram' },
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'twitter',
+        },
+      ],
+      preview: {
+        select: { url: 'url', platform: 'platform' },
+        prepare: (val: any) => ({ title: `📱 ${val.platform} Embed`, subtitle: val.url }),
+      },
+    },
+    // Call to Action Button
+    {
+      type: 'object',
+      name: 'callToAction',
+      title: 'Call to Action Button',
+      fields: [
+        { name: 'buttonText', type: 'string', title: 'Button Text', validation: (Rule: any) => Rule.required() },
+        { name: 'url', type: 'url', title: 'Destination URL', validation: (Rule: any) => Rule.uri({ allowRelative: true }) },
+        {
+          name: 'style',
+          type: 'string',
+          title: 'Button Style',
+          options: {
+            list: [
+              { title: 'Primary (Purple)', value: 'primary' },
+              { title: 'Secondary (Orange)', value: 'secondary' },
+              { title: 'Outline', value: 'outline' },
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'primary',
+        },
+      ],
+      preview: {
+        select: { title: 'buttonText', subtitle: 'url' },
+        prepare: (val: any) => ({ title: `🔘 Button: ${val.title}`, subtitle: val.subtitle }),
+      },
+    },
   ],
 }
 
