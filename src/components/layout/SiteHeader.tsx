@@ -199,8 +199,7 @@ export function SiteHeader() {
                                             "absolute bottom-0 left-4 right-4 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left",
                                             accent === "crimson" && "bg-cbc-crimson",
                                             accent === "gold" && "bg-cbc-gold",
-                                            accent === "cyan" && "bg-cbc-cyan",
-                                            accent === "purple" && "bg-cbc-purple",
+                                            accent === "cyan" && "bg-cbc-cyan"
                                         )}
                                     />
                                 </Link>
