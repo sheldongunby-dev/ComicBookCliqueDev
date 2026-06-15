@@ -39,10 +39,6 @@ export const news = defineType({
       type: 'r2-image',
       group: 'content',
       options: { hotspot: true },
-      fields: [
-        { name: 'alt', type: 'string', title: 'Alt text' },
-        { name: 'caption', type: 'string', title: 'Caption (optional)' },
-      ],
     }),
     defineField({
       name: 'content',

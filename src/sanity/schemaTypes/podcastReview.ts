@@ -45,9 +45,6 @@ export const podcastReview = defineType({
       type: 'r2-image',
       group: 'content',
       options: { hotspot: true },
-      fields: [
-        { name: 'alt', type: 'string', title: 'Alt text' },
-      ],
     }),
     defineField({
       name: 'notes',
