@@ -164,9 +164,9 @@ export function R2ImageUpload(props: ObjectInputProps<R2ImageValue>) {
       </Card>
 
       {/* Render the alt text field normally using Sanity's renderField */}
-        {altFieldMember && renderField && (
+        {altFieldMember && renderField && altFieldMember.kind === 'field' && (
           <Box marginTop={3}>
-            {renderField({ member: altFieldMember, ...props })}
+            {renderField(altFieldMember)}
           </Box>
         )}
     </Stack>
