@@ -14,4 +14,4 @@ jobs:
         run: |
           # Fetch the sync endpoint. It uses the SYNC_SECRET to prevent unauthorized execution.
           # The route will fetch the latest 50 episodes and push them to Sanity via the SANITY_API_WRITE_TOKEN.
-          curl -f -s -S "https://comicbookclique.com/api/sync/podbean?secret=${{ secrets.SYNC_SECRET }}" || (echo "Sync failed!" && exit 1)
+          curl -f -s -S "https://comic-book-clique.vercel.app/api/sync/podbean?secret=${{ secrets.SYNC_SECRET }}" || (echo "Sync failed!" && exit 1)
