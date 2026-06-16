@@ -184,6 +184,17 @@ export function getAuthors() {
 // Maps Sanity document shape → app schema shape
 // ─────────────────────────────────────────────
 
+function cleanExcerpt(text: string | null | undefined): string {
+  if (!text) return '';
+  // Remove HTML tags
+  let cleaned = text.replace(/<[^>]*>?/gm, '');
+  // Remove WordPress-style shortcodes like [caption ...]
+  cleaned = cleaned.replace(/\[\/?.*?\]/g, '');
+  // Decode common HTML entities
+  cleaned = cleaned.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  return cleaned.trim();
+}
+
 function normalizeItem(type: string) {
   return (doc: any): any => {
     const base = {
@@ -194,7 +205,7 @@ function normalizeItem(type: string) {
       title: doc.title ?? doc.showName ?? '',
       publishDate: doc.publishDate ?? new Date().toISOString().split('T')[0],
       category: doc.category ?? type,
-      excerpt: doc.excerpt ?? '',
+      excerpt: cleanExcerpt(doc.excerpt),
       featured: doc.featured ?? false,
       tags: doc.tags ?? [],
       author: doc.author ?? { name: 'ComicBook Clique', avatar: null },
