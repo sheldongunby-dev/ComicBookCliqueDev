@@ -205,7 +205,7 @@ function normalizeItem(type: string) {
       title: doc.title ?? doc.showName ?? '',
       publishDate: doc.publishDate ?? new Date().toISOString().split('T')[0],
       category: doc.category ?? type,
-      excerpt: cleanExcerpt(doc.excerpt),
+      excerpt: cleanExcerpt(doc.excerpt || doc.description),
       featured: doc.featured ?? false,
       tags: doc.tags ?? [],
       author: doc.author ?? { name: 'ComicBook Clique', avatar: null },
@@ -222,7 +222,7 @@ function normalizeItem(type: string) {
       content: doc.content ?? null,
       // SEO
       seoTitle: doc.seoTitle ?? undefined,
-      seoDescription: doc.seoDescription ?? undefined,
+      seoDescription: cleanExcerpt(doc.seoDescription || doc.excerpt || doc.description) || undefined,
       ogImage: doc.ogImage ?? undefined,
     }
 
@@ -239,6 +239,7 @@ function normalizeItem(type: string) {
     if (type === 'podcast') {
       return {
         ...base,
+        description: base.excerpt,
         episodeNumber: doc.episodeNumber ?? 0,
         spotifyUrl: doc.spotifyUrl ?? undefined,
         appleUrl: doc.appleUrl ?? undefined,
