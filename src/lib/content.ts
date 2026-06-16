@@ -192,6 +192,12 @@ function cleanExcerpt(text: string | null | undefined): string {
   cleaned = cleaned.replace(/\[\/?.*?\]/g, '');
   // Decode common HTML entities
   cleaned = cleaned.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  // Remove literal \n, \r, \t strings that might have leaked from escaped JSON
+  cleaned = cleaned.replace(/\\[nrt]/g, ' ');
+  // Replace actual newlines, carriage returns, and tabs with spaces
+  cleaned = cleaned.replace(/[\n\r\t]+/g, ' ');
+  // Collapse multiple spaces into a single space
+  cleaned = cleaned.replace(/\s+/g, ' ');
   return cleaned.trim();
 }
 
