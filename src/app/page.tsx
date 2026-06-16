@@ -1,4 +1,4 @@
-import { getFeaturedReviews, getReviews, getLatestNews, getPodcastEpisodes, getArticles, getNews, getSiteSettings } from "@/lib/content";
+import { getFeaturedReviews, getReviews, getLatestNews, getPodcastEpisodes, getPodcastEpisodesByCategory, getArticles, getNews, getSiteSettings } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { EditorialHero } from "@/components/cinematic/EditorialHero";
 import { ReviewCard } from "@/components/editorial/ReviewCard";
@@ -34,6 +34,7 @@ export default async function HomePage() {
     const latestNews = await getLatestNews(5);
     const podcastEpisodes = await getPodcastEpisodes();
     const topPodcasts = podcastEpisodes.slice(0, 4);
+    const dsrEpisodes = await getPodcastEpisodesByCategory('dirt-sheet-radio');
     
     const allReviews = await getReviews();
     const featuredList = allReviews.filter(r => r.featured);
@@ -254,7 +255,7 @@ export default async function HomePage() {
                             </div>
                         </div>
                         <div className="flex flex-col gap-3">
-                            {topPodcasts.slice(0, 3).map((ep) => (
+                            {dsrEpisodes.slice(0, 3).map((ep) => (
                                 <DsrCard key={ep.id} episode={ep} variant="list" />
                             ))}
                         </div>
