@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { set, unset, ObjectInputProps } from 'sanity';
+import { set, unset, ObjectInputProps, MemberField } from 'sanity';
 import { Box, Button, Card, Flex, Stack, Text, Inline, Spinner } from '@sanity/ui';
 import { UploadIcon, TrashIcon, ImageIcon } from '@sanity/icons';
 
@@ -11,7 +11,7 @@ export interface R2ImageValue {
 }
 
 export function R2ImageUpload(props: ObjectInputProps<R2ImageValue>) {
-  const { value, onChange, members, renderField } = props;
+  const { value, onChange, members, renderField, renderInput, renderItem, renderPreview } = props;
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -163,13 +163,18 @@ export function R2ImageUpload(props: ObjectInputProps<R2ImageValue>) {
         </Stack>
       </Card>
 
-      {/* Render the alt text field normally using Sanity's renderField */}
-        {altFieldMember && renderField && altFieldMember.kind === 'field' && (
-          <Box marginTop={3}>
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {renderField(altFieldMember.field as any)}
-          </Box>
-        )}
+      {/* Render the alt text field normally using Sanity's MemberField */}
+      {altFieldMember && altFieldMember.kind === 'field' && (
+        <Box marginTop={3}>
+          <MemberField
+            member={altFieldMember}
+            renderItem={renderItem}
+            renderField={renderField}
+            renderInput={renderInput}
+            renderPreview={renderPreview}
+          />
+        </Box>
+      )}
     </Stack>
   );
 }
