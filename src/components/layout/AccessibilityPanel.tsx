@@ -5,6 +5,7 @@ import { useAccessibility, TextSize, ContrastMode, SpacingLevel, TrackingLevel }
 import { Accessibility, X, Type, Eye, AlignLeft, EyeOff, Activity, RotateCcw, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils/helpers";
+import { usePathname } from "next/navigation";
 
 export function AccessibilityPanel() {
     const {

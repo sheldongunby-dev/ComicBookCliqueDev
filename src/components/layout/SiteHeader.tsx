@@ -47,7 +47,10 @@ const accentBgMap: Record<string, string> = {
     orange: "bg-dsr-orange",
 };
 
+import { usePathname } from "next/navigation";
+
 export function SiteHeader() {
+    const pathname = usePathname();
     const [scrolled, setScrolled] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isLive, setIsLive] = useState(false);
@@ -72,6 +75,8 @@ export function SiteHeader() {
         const interval = setInterval(checkLive, 120000); // Check every 2 minutes
         return () => clearInterval(interval);
     }, []);
+
+    if (pathname.startsWith("/studio")) return null;
 
     return (
         <>

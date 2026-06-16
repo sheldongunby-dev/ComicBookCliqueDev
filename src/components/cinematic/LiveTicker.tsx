@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Radio } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export interface TickerHeadline {
     label: string;
@@ -12,6 +14,26 @@ export interface TickerHeadline {
 }
 
 export function LiveTicker({ headlines }: { headlines: TickerHeadline[] }) {
+    const pathname = usePathname();
+    const [isLive, setIsLive] = useState(false);
+
+    useEffect(() => {
+        const checkLive = async () => {
+            try {
+                const res = await fetch("/api/dsr-live");
+                const data = await res.json();
+                setIsLive(!!data.isLive);
+            } catch (e) {
+                console.error("DSR Live Ticker Check Failed:", e);
+            }
+        };
+        checkLive();
+        const interval = setInterval(checkLive, 120000); // Auto-update every 2 minutes
+        return () => clearInterval(interval);
+    }, []);
+
+    if (pathname.startsWith("/studio")) return null;
+
     if (!headlines || headlines.length === 0) {
         return null;
     }
@@ -19,11 +41,13 @@ export function LiveTicker({ headlines }: { headlines: TickerHeadline[] }) {
     return (
         <div className="fixed top-[calc(4rem+2px)] md:top-[calc(5rem+2px)] left-0 right-0 w-full bg-[#0A0A0F] border-b border-white/5 h-9 flex items-center overflow-hidden z-40">
             {/* DSR Live badge */}
-            <div className="shrink-0 flex items-center gap-2 px-4 bg-dsr-orange h-full z-10">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-on-air" />
-                <span className="font-label text-[10px] font-bold tracking-[0.2em] uppercase text-white whitespace-nowrap">Live</span>
-                <Radio size={12} className="text-white" />
-            </div>
+            {isLive && (
+                <Link href="/dirtsheetradio" className="shrink-0 flex items-center gap-2 px-4 bg-dsr-orange h-full z-10 hover:opacity-90 transition-opacity">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-on-air" />
+                    <span className="font-label text-[10px] font-bold tracking-[0.2em] uppercase text-white whitespace-nowrap">Live</span>
+                    <Radio size={12} className="text-white" />
+                </Link>
+            )}
 
             {/* Scrolling headlines */}
             <div className="overflow-hidden flex-1 relative">
